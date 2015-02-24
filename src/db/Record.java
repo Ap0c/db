@@ -29,6 +29,11 @@ public class Record {
 		setValue(2, "four");
 		assert getValue(2).equals("four") : "Value not set correctly.";
 		assert noFields() == 3 : "Incorrect number of fields.";
+		removeField(1);
+		assert noFields() == 2 : "Field not removed properly.";
+		assert getValue(1).equals("four") : "Field not removed properly.";
+		addField();
+		assert getValue(2) == null : "Field not removed properly.";
 
 	}
 
@@ -44,7 +49,7 @@ public class Record {
 		if (index < values.size()) {
 			return values.get(index);
 		} else {
-			System.out.println("Record does not exist.");
+			System.out.println("Field does not exist.");
 			return null;
 		}
 
@@ -62,7 +67,31 @@ public class Record {
 		if (index < values.size()) {
 			values.set(index, value);		
 		} else {
-			System.out.println("Record does not exist.");
+			System.out.println("Field does not exist.");
+		}
+
+	}
+
+	/**
+	 * Adds a field to the record.
+	 * 
+	 * @since 0.2
+	 */
+	public void addField() {
+		values.add(null);
+	}
+
+	/**
+	 * Removes a field from the record.
+	 * 
+	 * @since 0.2
+	 */
+	public void removeField(int index) {
+
+		if (index < values.size()) {
+			values.remove(index);		
+		} else {
+			System.out.println("Field does not exist.");
 		}
 
 	}

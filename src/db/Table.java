@@ -18,6 +18,33 @@ class Table {
 
 	// ----- Instance Methods ----- //
 
+	private void testTable () {
+
+		assert Arrays.equals(columns.toArray(), getColumns()) : "Table " +
+			"columns not added correctly.";
+		String[] values = {"valOne", "valTwo", "valThree"};
+		addRow(values);
+		assert rows.size() == 1 : "Row not added correctly.";
+		assert rows.get(0).getValue(1).equals("valTwo") : "Row not added " +
+			"correctly";
+		assert noRecords() == 1 : "Rows not counted correctly.";
+		addColumn("colFour");
+		assert columns.size() == 4 : "Column not added correctly.";
+		assert columns.get(3) == "colFour" : "Column not added correctly.";
+		assert rows.get(0).noFields() == 4 : "Row field not added correctly.";
+		renameColumn("colFour", "colFive");
+		assert columns.get(3) == "colFive" : "Column not renamed correctly.";
+		deleteColumn("colOne");
+		assert columns.size() == 3 : "Column not removed correctly.";
+		assert columns.get(0).equals("colTwo") : "Column not removed " +
+			"correctly.";
+		assert rows.get(0).getValue(3) == null : "Row field not removed " + 
+			"correctly.";
+		deleteRow(0);
+		assert noRecords() == 0 : "Row not removed correctly.";
+
+	}
+
 	/**
 	 * Gets the column names as an array of strings.
 	 * 
@@ -69,7 +96,7 @@ class Table {
 	 * @param newName the new name of the column.
 	 * @since 0.2
 	 */
-	public void renameColumn(String oldName, String newName) {
+	public void renameColumn (String oldName, String newName) {
 		int columnIndex = columns.indexOf(oldName);
 		columns.set(columnIndex, newName);
 	}
@@ -80,7 +107,7 @@ class Table {
 	 * @param values the values to populate the row being added.
 	 * @since 0.2
 	 */
-	public void addRow(String[] values) {
+	public void addRow (String[] values) {
 		Record newRecord = new Record(values);
 		rows.add(newRecord);
 	}
@@ -91,7 +118,7 @@ class Table {
 	 * @param number the number of the row to be deleted (zero-indexed).
 	 * @since 0.2
 	 */
-	public void deleteRow(int number) {
+	public void deleteRow (int number) {
 
 		if (number < rows.size()) {
 			rows.remove(number);		
@@ -107,7 +134,7 @@ class Table {
 	 * @return the integer number of rows.
 	 * @since 0.2
 	 */
-	public int noRecords() {
+	public int noRecords () {
 		return rows.size();		
 	}
 
@@ -121,7 +148,12 @@ class Table {
 	// ----- Main ----- //
 
 	public static void main(String[] args) {
-		
+
+		String[] columns = {"colOne", "colTwo", "colThree"};
+		Table table = new Table(columns);
+		table.testTable();
+		System.out.println("Table tests complete.");
+
 	}
 
 }

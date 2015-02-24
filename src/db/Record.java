@@ -27,11 +27,11 @@ public class Record {
 		assert getValue(0).equals("one") : "Got incorrect field value.";
 		assert getValue(3) == null : "Index should be out of range.";
 		setValue(2, "four");
-		assert getValue(2).equals("four") : "Value not set correctly.";
+		assert values.get(2).equals("four") : "Value not set correctly.";
 		assert noFields() == 3 : "Incorrect number of fields.";
 		removeField(1);
 		assert noFields() == 2 : "Field not removed properly.";
-		assert getValue(1).equals("four") : "Field not removed properly.";
+		assert values.get(1).equals("four") : "Field not removed properly.";
 		addField();
 		assert getValue(2) == null : "Field not removed properly.";
 
@@ -83,7 +83,8 @@ public class Record {
 
 	/**
 	 * Removes a field from the record.
-	 * 
+	 *
+	 * @param index the index of the field to be removed.
 	 * @since 0.2
 	 */
 	public void removeField(int index) {

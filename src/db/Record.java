@@ -18,6 +18,21 @@ public class Record {
 	// ----- Instance Methods ----- //
 
 	/**
+	 * Tests the methods in the Record class, must be run with -ea.
+	 * 
+	 * @since 0.1
+	 */
+	private void testRecord () {
+
+		assert getValue(0).equals("one") : "Got incorrect field value.";
+		assert getValue(3) == null : "Index should be out of range.";
+		setValue(2, "four");
+		assert getValue(2).equals("four") : "Value not set correctly.";
+		assert noFields() == 3 : "Incorrect number of fields.";
+
+	}
+
+	/**
 	 * Gets the value of a record field at a given index.
 	 *
 	 * @param index the index of the field.
@@ -27,7 +42,7 @@ public class Record {
 	public String getValue (int index) {
 
 		if (index < values.size()) {
-			return values.get(index);		
+			return values.get(index);
 		} else {
 			System.out.println("Record does not exist.");
 			return null;
@@ -62,13 +77,27 @@ public class Record {
 		return values.size();
 	}
 
+	// ----- Constructor ----- //
+
 	/**
 	 * Class constructor.
 	 *
 	 * @param vals An array of values to populate the record with.
+	 * @since 0.1
 	 */
 	public Record (String[] vals) {
 		this.values = new ArrayList<String>(Arrays.asList(vals));
+	}
+
+	// ----- Main ----- //
+
+	public static void main(String[] args) {
+
+		String[] values = {"one", "two", "three"};
+		Record record = new Record(values);
+		record.testRecord();
+		System.out.println("Record tests complete.");
+
 	}
 
 }

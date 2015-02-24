@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 /**
  * Holds a single record in the database, aka a row.
+ *
+ * @since 0.1
  */
 
 public class Record {
@@ -20,6 +22,7 @@ public class Record {
 	 *
 	 * @param index the index of the field.
 	 * @return the value stored in the field.
+	 * @since 0.1
 	 */
 	public String getValue (int index) {
 
@@ -37,6 +40,7 @@ public class Record {
 	 * 
 	 * @param index the index of the field.
 	 * @param value the value to store in the field.
+	 * @since 0.1
 	 */
 	public void setValue (int index, String value) {
 
@@ -52,6 +56,7 @@ public class Record {
 	 * Gets the number of fields in a record.
 	 * 
 	 * @return the integer number of fields.
+	 * @since 0.1
 	 */
 	public int noFields () {
 		return values.size();

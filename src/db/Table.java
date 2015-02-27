@@ -18,6 +18,11 @@ class Table {
 
 	// ----- Instance Methods ----- //
 
+	/**
+	 * Tests the methods in the Table class, must be run with -ea.
+	 * 
+	 * @since 0.2
+	 */
 	private void testTable () {
 
 		assert Arrays.equals(columns.toArray(), getColumns()) : "Table " +

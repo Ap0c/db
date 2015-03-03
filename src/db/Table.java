@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @since 0.2
  */
 
-class Table implements java.io.Serializable {
+public class Table implements java.io.Serializable {
 
 	// ----- Instance Variables ----- //
 

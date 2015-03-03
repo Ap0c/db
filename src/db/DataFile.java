@@ -14,11 +14,11 @@ import java.util.Arrays;
  * @since 0.3
  */
 
-class DataFile {
+public class DataFile {
 
 	// ----- Class Variables ----- //
 
-	private static final String dataDir = "data/";
+	private static final String dataDir = "./data/";
 
 	// ----- Instance Methods ----- //
 
@@ -69,7 +69,9 @@ class DataFile {
 	 */
 	public void saveTable (Table table, String name) throws IOException {
 
-		FileOutputStream file = new FileOutputStream(dataDir + name);
+		System.out.println(dataDir + name);
+
+		FileOutputStream file = new FileOutputStream(dataDir + name + ".ser");
 		ObjectOutputStream objectOut = new ObjectOutputStream(file);
 
 		objectOut.writeObject(table);
@@ -88,7 +90,8 @@ class DataFile {
 	public Table readTable (String tableName)
 		throws IOException, ClassNotFoundException {
 
-		FileInputStream file = new FileInputStream(dataDir + tableName);
+		FileInputStream file = new FileInputStream(
+			dataDir + tableName + ".ser");
 		ObjectInputStream objectIn = new ObjectInputStream(file);
 
 		Table table = (Table) objectIn.readObject();

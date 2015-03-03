@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @since 0.1
  */
 
-public class Record {
+public class Record implements java.io.Serializable {
 
 	// ----- Instance Variables ----- //
 

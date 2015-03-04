@@ -1,4 +1,4 @@
-package db;
+// package db;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,26 +27,40 @@ public class Table implements java.io.Serializable {
 
 		assert Arrays.equals(columns.toArray(), getColumns()) : "Table " +
 			"columns not added correctly.";
+
 		String[] values = {"valOne", "valTwo", "valThree"};
 		addRow(values);
 		assert rows.size() == 1 : "Row not added correctly.";
 		assert rows.get(0).getValue(1).equals("valTwo") : "Row not added " +
 			"correctly";
 		assert noRecords() == 1 : "Rows not counted correctly.";
+
 		addColumn("colFour");
 		assert columns.size() == 4 : "Column not added correctly.";
 		assert columns.get(3) == "colFour" : "Column not added correctly.";
 		assert rows.get(0).noFields() == 4 : "Row field not added correctly.";
+
 		renameColumn("colFour", "colFive");
 		assert columns.get(3) == "colFive" : "Column not renamed correctly.";
+
 		deleteColumn("colOne");
 		assert columns.size() == 3 : "Column not removed correctly.";
 		assert columns.get(0).equals("colTwo") : "Column not removed " +
 			"correctly.";
 		assert rows.get(0).getValue(3) == null : "Row field not removed " + 
 			"correctly.";
+
+		String[] moreValues = {"valFour", "valFive", "valSix"};
+		addRow(moreValues);
+		Record[] retrievedRows = getRows();
+		for (int i = noRecords() - 1; i >= 0; i--) {
+			String[] rowValues = rows.get(i).getValues();
+			assert Arrays.equals(rowValues, retrievedRows[i].getValues()) : 
+				"Rows not retrieved correctly.";
+		}
+
 		deleteRow(0);
-		assert noRecords() == 0 : "Row not removed correctly.";
+		assert noRecords() == 1 : "Row not removed correctly.";
 
 	}
 
@@ -117,12 +131,27 @@ public class Table implements java.io.Serializable {
 	}
 
 	/**
-	 * Adds a row to the table.
+	 * Adds a row to the table if primary key is unique.
 	 *
 	 * @param values the values to populate the row being added.
 	 * @since 0.2
 	 */
 	public void addRow (String[] values) {
+
+		if (values.length != columns.size()) {
+			System.err.println("Incorrect number of values.");
+			return;
+		}
+
+		String primaryKey = values[0];
+
+		for (Record row : rows) {
+			if (row.getValue(0).equals(primaryKey)) {
+				System.err.println("Primary key must be unique: " + primaryKey);
+				return;
+			}
+		}
+
 		Record newRecord = new Record(values);
 		rows.add(newRecord);
 	}
@@ -138,7 +167,7 @@ public class Table implements java.io.Serializable {
 		if (number < rows.size()) {
 			rows.remove(number);		
 		} else {
-			System.out.println("Row does not exist.");
+			System.err.println("Row does not exist.");
 		}
 
 	}

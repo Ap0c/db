@@ -1,4 +1,4 @@
-package db;
+// package db;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,14 +26,19 @@ public class Record implements java.io.Serializable {
 
 		assert getValue(0).equals("one") : "Got incorrect field value.";
 		assert getValue(3) == null : "Index should be out of range.";
+
 		setValue(2, "four");
 		assert values.get(2).equals("four") : "Value not set correctly.";
 		assert noFields() == 3 : "Incorrect number of fields.";
+
 		removeField(1);
 		assert noFields() == 2 : "Field not removed properly.";
 		assert values.get(1).equals("four") : "Field not removed properly.";
+
 		addField();
 		assert getValue(2) == null : "Field not removed properly.";
+		assert Arrays.equals(values.toArray(), getValues()) : "Values got do" +
+			" not match.";
 
 	}
 
@@ -49,7 +54,7 @@ public class Record implements java.io.Serializable {
 		if (index < values.size()) {
 			return values.get(index);
 		} else {
-			System.out.println("Field does not exist.");
+			System.err.println("Field does not exist.");
 			return null;
 		}
 
@@ -77,7 +82,7 @@ public class Record implements java.io.Serializable {
 		if (index < values.size()) {
 			values.set(index, value);		
 		} else {
-			System.out.println("Field does not exist.");
+			System.err.println("Field does not exist.");
 		}
 
 	}
@@ -102,7 +107,7 @@ public class Record implements java.io.Serializable {
 		if (index < values.size()) {
 			values.remove(index);		
 		} else {
-			System.out.println("Field does not exist.");
+			System.err.println("Field does not exist.");
 		}
 
 	}

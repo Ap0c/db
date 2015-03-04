@@ -27,7 +27,7 @@ public class DataFile {
 	 * 
 	 * @since 0.3
 	 */
-	private void testFile () {
+	private void testDataFile () {
 
 		String[] columns = {"colOne", "colTwo", "colThree"};
 		Table table = new Table(columns);
@@ -66,6 +66,8 @@ public class DataFile {
 			System.err.println("Problem obtaining file list.");
 			System.exit(1);
 		}
+
+		test.delete();
 
 	}
 
@@ -131,8 +133,8 @@ public class DataFile {
 	public static void main(String[] args) {
 
 		DataFile file = new DataFile("bin/data/");
-		file.testFile();
-		System.out.println("File tests complete.");
+		file.testDataFile();
+		System.out.println("DataFile tests complete.");
 
 	}
 	

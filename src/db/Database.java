@@ -95,6 +95,7 @@ public class Database {
 		String[] tableNames = dataFile.listTables();
 
 		for (String tableName : tableNames) {
+			tableName = tableName.substring(0, tableName.lastIndexOf("."));
 			Table table = dataFile.readTable(tableName);
 			tables.put(tableName, table);
 		}
@@ -114,6 +115,12 @@ public class Database {
 			dataFile.saveTable(table.getValue(), table.getKey());
 		}
 
+	}
+
+	// ----- Constructor ----- //
+
+	public Database () {
+		this.tables = new HashMap<>();
 	}
 
 	// ----- Main ----- //

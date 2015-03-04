@@ -1,2 +1,4 @@
 *.class
 bin/
+*.sublime-project
+*.sublime-workspace

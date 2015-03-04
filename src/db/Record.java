@@ -56,6 +56,16 @@ public class Record implements java.io.Serializable {
 	}
 
 	/**
+	 * Gets the array of values stored in a record.
+	 *
+	 * @return an array of Strings containing the values.
+	 * @since 0.4
+	 */
+	public String[] getValues () {
+		return values.toArray(new String[values.size()]);
+	}
+
+	/**
 	 * Sets the value of a record field at a given index.
 	 * 
 	 * @param index the index of the field.

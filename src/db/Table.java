@@ -61,6 +61,16 @@ public class Table implements java.io.Serializable {
 	}
 
 	/**
+	 * Gets all of the rows in the table.
+	 * 
+	 * @return a Record array containing the rows.
+	 * @since 0.4
+	 */
+	public Record[] getRows () {
+		return rows.toArray(new Record[rows.size()]);
+	}
+
+	/**
 	 * Adds a column to the list of table columns. Also updates the records.
 	 *
 	 * @param name the name of the column to be added.

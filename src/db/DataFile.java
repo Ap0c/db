@@ -69,8 +69,6 @@ public class DataFile {
 	 */
 	public void saveTable (Table table, String name) throws IOException {
 
-		System.out.println(dataDir + name);
-
 		FileOutputStream file = new FileOutputStream(dataDir + name + ".ser");
 		ObjectOutputStream objectOut = new ObjectOutputStream(file);
 

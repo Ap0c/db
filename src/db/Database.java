@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 
-class Database {
+public class Database {
 
 	// ----- Instance Variables ----- //
 
@@ -12,9 +12,21 @@ class Database {
 
 	// ----- Instance Methods ----- //
 
-	public void createTable (String[] columns) {
+	/**
+	 * Creates a table and adds it to the list of table objects in memory.
+	 * 
+	 * @param name the name of the table to be created.
+	 * @param columns an array of Strings containing the column names.
+	 * @since 0.5
+	 */
+	public void createTable (String name, String[] columns) {
 
-
+		if (!tables.containsKey(name)) {
+			Table table = new Table(columns);
+			tables.put(name, table);
+		} else {
+			System.err.println("Error, table already exists.");
+		}
 
 	}
 
@@ -23,11 +35,15 @@ class Database {
 	 * 
 	 * @since 0.5
 	 */
-	public void buildTables () {
+	public void buildTables () throws Exception {
 
-		DataFile datafile = new DataFile("bin/data/");
+		DataFile dataFile = new DataFile("bin/data/");
+		String[] tableNames = dataFile.listTables();
 
-
+		for (String tableName : tableNames) {
+			Table table = dataFile.readTable(tableName);
+			tables.put(tableName, table);
+		}
 
 	}
 
@@ -38,11 +54,19 @@ class Database {
 	 */
 	public void writeTables () throws IOException {
 
-		DataFile datafile = new DataFile("bin/data/");
+		DataFile dataFile = new DataFile("bin/data/");
 
 		for (Map.Entry<String, Table> table : tables.entrySet()) {
-			datafile.saveTable(table.getValue(), table.getKey());
+			dataFile.saveTable(table.getValue(), table.getKey());
 		}
+
+	}
+
+	// ----- Main ----- //
+
+	public static void main(String[] args) {
+
+		Database database = new Database();
 
 	}
 

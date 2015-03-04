@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 public class DataFile {
 
-	// ----- Class Variables ----- //
+	// ----- Instance Variables ----- //
 
-	private static final String dataDir = "./data/";
+	private String dataDir;
 
 	// ----- Instance Methods ----- //
 
@@ -39,7 +39,7 @@ public class DataFile {
 			System.exit(1);
 		}
 
-		File test = new File(dataDir + fileName);
+		File test = new File(dataDir + fileName + ".ser");
 		assert test.exists() : "File not created correctly.";
 
 		Table testTable = null;
@@ -57,6 +57,15 @@ public class DataFile {
 		assert testTable != null : "Table not read in correctly.";
 		assert Arrays.equals(columns, testTable.getColumns()) : "Incorrect " +
 		"object in file.";
+
+		try {
+			assert listTables()[0].equals("testTable.ser") :
+				"File list incorrect.";
+			assert listTables().length == 1 : "Wrong number of files listed.";
+		} catch (IOException e) {
+			System.err.println("Problem obtaining file list.");
+			System.exit(1);
+		}
 
 	}
 
@@ -100,11 +109,28 @@ public class DataFile {
 
 	}
 
+	/**
+	 * Get the names of all the tables stored in files.
+	 * 
+	 * @return the table names as Strings in an array.
+	 * @since 0.5
+	 */
+	public String[] listTables () throws IOException {
+		File dataDirectory = new File(dataDir);
+		return dataDirectory.list();
+	}
+
+	// ----- Constructor ----- //
+
+	public DataFile (String dataDirectory) {
+		this.dataDir = dataDirectory;
+	}
+
 	// ----- Main ----- //
 
 	public static void main(String[] args) {
 
-		DataFile file = new DataFile();
+		DataFile file = new DataFile("bin/data/");
 		file.testFile();
 		System.out.println("File tests complete.");
 

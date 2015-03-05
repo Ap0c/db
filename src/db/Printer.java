@@ -25,8 +25,18 @@ public class Printer {
 
 		String[] rowOne = {"one", "two", "three"};
 		String[] rowTwo = {"four", "five", "six"};
-		table.addRow(rowOne);
-		table.addRow(rowTwo);
+		try {
+			table.addRow(rowOne);		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		try {
+			table.addRow(rowTwo);		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 
 		System.out.println("Printing rows:");
 		printRows(table.getRows());

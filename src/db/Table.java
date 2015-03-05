@@ -29,11 +29,26 @@ public class Table implements java.io.Serializable {
 			"columns not added correctly.";
 
 		String[] values = {"valOne", "valTwo", "valThree"};
-		addRow(values);
+		try {
+			addRow(values);		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		assert rows.size() == 1 : "Row not added correctly.";
 		assert rows.get(0).getValue(1).equals("valTwo") : "Row not added " +
 			"correctly";
 		assert noRecords() == 1 : "Rows not counted correctly.";
+
+		try {
+			addRow(values);
+		} catch (Exception e) {
+			if (!e.getMessage().equals(
+				"Primary key must be unique: " + values[0])) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
 
 		addColumn("colFour");
 		assert columns.size() == 4 : "Column not added correctly.";
@@ -51,7 +66,12 @@ public class Table implements java.io.Serializable {
 			"correctly.";
 
 		String[] moreValues = {"valFour", "valFive", "valSix"};
-		addRow(moreValues);
+		try {
+			addRow(moreValues);		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		Record[] retrievedRows = getRows();
 		for (int i = noRecords() - 1; i >= 0; i--) {
 			String[] rowValues = rows.get(i).getValues();
@@ -59,7 +79,12 @@ public class Table implements java.io.Serializable {
 				"Rows not retrieved correctly.";
 		}
 
-		deleteRow(0);
+		try {
+			deleteRow("valTwo");		
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		assert noRecords() == 1 : "Row not removed correctly.";
 
 	}
@@ -136,19 +161,17 @@ public class Table implements java.io.Serializable {
 	 * @param values the values to populate the row being added.
 	 * @since 0.2
 	 */
-	public void addRow (String[] values) {
+	public void addRow (String[] values) throws Exception {
 
 		if (values.length != columns.size()) {
-			System.err.println("Incorrect number of values.");
-			return;
+			throw new Exception("Incorrect number of values.");
 		}
 
-		String primaryKey = values[0];
+		String primKey = values[0];
 
 		for (Record row : rows) {
-			if (row.getValue(0).equals(primaryKey)) {
-				System.err.println("Primary key must be unique: " + primaryKey);
-				return;
+			if (row.getValue(0).equals(primKey)) {
+				throw new Exception("Primary key must be unique: " + primKey);
 			}
 		}
 
@@ -159,16 +182,19 @@ public class Table implements java.io.Serializable {
 	/**
 	 * Deletes a given row in the table.
 	 *
-	 * @param number the number of the row to be deleted (zero-indexed).
+	 * @param primaryKey the primary-key of the row to be deleted.
 	 * @since 0.2
 	 */
-	public void deleteRow (int number) {
+	public void deleteRow (String primaryKey) throws Exception {
 
-		if (number < rows.size()) {
-			rows.remove(number);		
-		} else {
-			System.err.println("Row does not exist.");
+		for (Record row : rows) {
+			if (row.getValue(0).equals(primaryKey)) {
+				rows.remove(row);
+				return;
+			}
 		}
+
+		throw new Exception("Row does not exist.");
 
 	}
 

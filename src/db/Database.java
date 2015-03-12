@@ -23,7 +23,12 @@ public class Database {
 	private void testDatabase () {
 
 		String[] columnsOne = {"colOne", "colTwo", "colThree"};
-		createTable("testTableOne", columnsOne);
+		try {
+			createTable("testTableOne", columnsOne);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		assert tables.containsKey("testTableOne") : "Table not added correctly";
 
 		Table tableOne = tables.get("testTableOne");
@@ -31,7 +36,12 @@ public class Database {
 			"stored correctly.";
 
 		String[] columnsTwo = {"colFour", "colFive", "colSix"};
-		createTable("testTableTwo", columnsTwo);
+		try {
+			createTable("testTableTwo", columnsTwo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		assert tables.containsKey("testTableTwo") : "Table not added correctly";
 
 		try {
@@ -105,13 +115,29 @@ public class Database {
 	 * @param columns an array of Strings containing the column names.
 	 * @since 0.5
 	 */
-	public void createTable (String name, String[] columns) {
+	public void createTable (String name, String[] columns) throws Exception {
 
 		if (!tables.containsKey(name)) {
 			Table table = new Table(columns);
 			tables.put(name, table);
 		} else {
-			System.err.println("Error, table already exists.");
+			throw new Exception("Error, table already exists.");
+		}
+
+	}
+
+	/**
+	 * Drops a table from the list of tables, if it exists.
+	 * 
+	 * @param name the name of the table to be removed.
+	 * @since 0.6
+	 */
+	public void dropTable (String name) throws Exception {
+
+		if (tables.containsKey(name)) {
+			tables.remove(name);
+		} else {
+			throw new Exception("Error, table does not exist.");
 		}
 
 	}

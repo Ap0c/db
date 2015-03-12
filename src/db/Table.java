@@ -177,6 +177,7 @@ public class Table implements java.io.Serializable {
 
 		Record newRecord = new Record(values);
 		rows.add(newRecord);
+
 	}
 
 	/**

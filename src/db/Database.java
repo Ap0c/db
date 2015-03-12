@@ -11,6 +11,7 @@ public class Database {
 	// ----- Instance Variables ----- //
 
 	private Map<String, Table> tables;
+	private String dataDir;
 
 	// ----- Instance Methods ----- //
 
@@ -20,8 +21,6 @@ public class Database {
 	 * @since 0.5
 	 */
 	private void testDatabase () {
-
-		String dataDir = "bin/data/";
 
 		String[] columnsOne = {"colOne", "colTwo", "colThree"};
 		createTable("testTableOne", columnsOne);
@@ -36,7 +35,7 @@ public class Database {
 		assert tables.containsKey("testTableTwo") : "Table not added correctly";
 
 		try {
-			writeTables(dataDir);
+			writeTables();
 		} catch (IOException e) {
 			System.err.println("Problem writing file.");
 			System.exit(1);
@@ -49,7 +48,7 @@ public class Database {
 
 		tables.clear();
 		try {
-			buildTables(dataDir);
+			buildTables();
 		} catch (Exception e) {
 			System.out.println("Problem reading from files.");
 			System.exit(1);
@@ -63,6 +62,39 @@ public class Database {
 
 		testFileOne.delete();
 		testFileTwo.delete();
+
+	}
+
+	/**
+	 * Creates all tables as objects in memory from the table data files.
+	 * 
+	 * @since 0.5
+	 */
+	private void buildTables () throws Exception {
+
+		DataFile dataFile = new DataFile(dataDir);
+		String[] tableNames = dataFile.listTables();
+
+		for (String tableName : tableNames) {
+			tableName = tableName.substring(0, tableName.lastIndexOf("."));
+			Table table = dataFile.readTable(tableName);
+			tables.put(tableName, table);
+		}
+
+	}
+
+	/**
+	 * Writes all the tables held in memory back to file.
+	 * 
+	 * @since 0.5
+	 */
+	private void writeTables () throws IOException {
+
+		DataFile dataFile = new DataFile(dataDir);
+
+		for (Map.Entry<String, Table> table : tables.entrySet()) {
+			dataFile.saveTable(table.getValue(), table.getKey());
+		}
 
 	}
 
@@ -84,52 +116,32 @@ public class Database {
 
 	}
 
-	/**
-	 * Creates all tables as objects in memory from the table data files.
-	 * 
-	 * @since 0.5
-	 */
-	public void buildTables (String location) throws Exception {
-
-		DataFile dataFile = new DataFile(location);
-		String[] tableNames = dataFile.listTables();
-
-		for (String tableName : tableNames) {
-			tableName = tableName.substring(0, tableName.lastIndexOf("."));
-			Table table = dataFile.readTable(tableName);
-			tables.put(tableName, table);
-		}
-
-	}
-
-	/**
-	 * Writes all the tables held in memory back to file.
-	 * 
-	 * @since 0.5
-	 */
-	public void writeTables (String location) throws IOException {
-
-		DataFile dataFile = new DataFile(location);
-
-		for (Map.Entry<String, Table> table : tables.entrySet()) {
-			dataFile.saveTable(table.getValue(), table.getKey());
-		}
-
-	}
-
 	// ----- Constructor ----- //
 
-	public Database () {
+	public Database (String location) throws Exception {
+
 		this.tables = new HashMap<>();
+		this.dataDir = location;
+
+		try {
+			buildTables();
+		} catch (Exception e) {
+			throw new Exception("Problem with database directory.");
+		}
+
 	}
 
 	// ----- Main ----- //
 
 	public static void main(String[] args) {
 
-		Database database = new Database();
-		database.testDatabase();
-		System.out.println("Database tests complete.");
+		try {
+			Database database = new Database("bin/data/");
+			database.testDatabase();
+			System.out.println("Database tests complete.");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 

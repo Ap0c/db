@@ -70,6 +70,14 @@ public class Database {
 		assert Arrays.equals(columnsOne, tableOne.getColumns()) : "Table not " +
 			"built correctly.";
 
+		try {
+			dropTable("testTableOne");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		assert !tables.containsKey("testTableOne") : "Table not dropped.";
+
 		testFileOne.delete();
 		testFileTwo.delete();
 

@@ -102,7 +102,8 @@ public class Database {
 	}
 
 	/**
-	 * Writes all the tables held in memory back to file.
+	 * Writes all the tables held in memory back to file, and deletes tables
+	 * that do not exist any more.
 	 * 
 	 * @since 0.5
 	 */
@@ -112,6 +113,14 @@ public class Database {
 
 		for (Map.Entry<String, Table> table : tables.entrySet()) {
 			dataFile.saveTable(table.getValue(), table.getKey());
+		}
+
+		String[] tableNames = dataFile.listTables();
+
+		for (String tableName : tableNames) {
+			if (!tables.containsKey(tableName)) {
+				dataFile.deleteTable(tableName);
+			}
 		}
 
 	}
@@ -146,6 +155,22 @@ public class Database {
 			tables.remove(name);
 		} else {
 			throw new Exception("Error, table does not exist.");
+		}
+
+	}
+
+	/**
+	 * Commits any changes the user has made to disk. This MUST be called at
+	 * the end of a session, otherwise some changes may not be added.
+	 * 
+	 * @since 0.6
+	 */
+	public void commit () throws Exception {
+
+		try {
+			writeTables();
+		} catch (IOException e) {
+			throw new Exception("Error, changes could not be committed.");
 		}
 
 	}

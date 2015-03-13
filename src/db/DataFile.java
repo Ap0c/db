@@ -112,6 +112,24 @@ public class DataFile {
 	}
 
 	/**
+	 * Removes a table file from disk.
+	 * 
+	 * @param tableName the name of the file containing the Table object.
+	 * @since 0.6
+	 */
+	public void deleteTable (String tableName) throws IOException {
+
+		File tableFile = new File(dataDir + tableName + ".ser");
+
+		try {
+			tableFile.delete();
+		} catch (SecurityException e) {
+			throw new IOException("File could not be deleted.");
+		}
+
+	}
+
+	/**
 	 * Get the names of all the tables stored in files.
 	 * 
 	 * @return the table names as Strings in an array.

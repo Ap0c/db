@@ -1,6 +1,7 @@
 // package db;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Arrays;
 
 /**
@@ -14,7 +15,7 @@ public class Table implements java.io.Serializable {
 	// ----- Instance Variables ----- //
 
 	private ArrayList<String> columns;
-	private ArrayList<Record> rows;
+	private LinkedList<Record> rows;
 
 	// ----- Instance Methods ----- //
 
@@ -205,7 +206,7 @@ public class Table implements java.io.Serializable {
 
 	public Table (String[] newColumns) {
 		this.columns = new ArrayList<String>(Arrays.asList(newColumns));
-		this.rows = new ArrayList<Record>();
+		this.rows = new LinkedList<Record>();
 	}
 
 	// ----- Main ----- //

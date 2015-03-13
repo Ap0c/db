@@ -16,7 +16,7 @@ public class Table implements java.io.Serializable {
 
 	private ArrayList<String> columns;
 	private LinkedList<Record> rows;
-
+ 
 	// ----- Instance Methods ----- //
 
 	/**
@@ -98,7 +98,7 @@ public class Table implements java.io.Serializable {
 	 * @return a Record array containing the rows.
 	 * @since 0.4
 	 */
-	public Record[] getRows () {
+	Record[] getRows () {
 		return rows.toArray(new Record[rows.size()]);
 	}
 
@@ -128,10 +128,17 @@ public class Table implements java.io.Serializable {
 	public void deleteColumn (String name) throws Exception {
 
 		int fieldIndex = columns.indexOf(name);
-		columns.remove(fieldIndex);
 
-		for (Record row : rows) {
-			row.removeField(fieldIndex);
+		if (fieldIndex != 0) {
+
+			columns.remove(fieldIndex);
+
+			for (Record row : rows) {
+				row.removeField(fieldIndex);
+			}
+
+		} else {
+			throw new Exception("Cannot delete primary key.");
 		}
 
 	}

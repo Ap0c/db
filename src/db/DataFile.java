@@ -14,7 +14,7 @@ import java.util.Arrays;
  * @since 0.3
  */
 
-public class DataFile {
+class DataFile {
 
 	// ----- Instance Variables ----- //
 
@@ -74,7 +74,7 @@ public class DataFile {
 	 * @param name name of the table, used to define filename.
 	 * @since 0.3
 	 */
-	public void saveTable (Table table, String name) throws IOException {
+	void saveTable (Table table, String name) throws IOException {
 
 		FileOutputStream file = new FileOutputStream(dataDir + name + ".ser");
 		ObjectOutputStream objectOut = new ObjectOutputStream(file);
@@ -92,7 +92,7 @@ public class DataFile {
 	 * @return the Table object that has been read in.
 	 * @since 0.3
 	 */
-	public Table readTable (String tableName)
+	Table readTable (String tableName)
 		throws IOException, ClassNotFoundException {
 
 		FileInputStream file = new FileInputStream(
@@ -113,7 +113,7 @@ public class DataFile {
 	 * @param tableName the name of the file containing the Table object.
 	 * @since 0.6
 	 */
-	public void deleteTable (String tableName) throws IOException {
+	void deleteTable (String tableName) throws IOException {
 
 		File tableFile = new File(dataDir + tableName + ".ser");
 
@@ -131,7 +131,7 @@ public class DataFile {
 	 * @return the table names as Strings in an array.
 	 * @since 0.5
 	 */
-	public String[] listTables () throws IOException {
+	String[] listTables () throws IOException {
 
 		File dataDirectory = new File(dataDir);
 		String[] tables = dataDirectory.list();
@@ -149,7 +149,7 @@ public class DataFile {
 
 	// ----- Constructor ----- //
 
-	public DataFile (String dataDirectory) {
+	DataFile (String dataDirectory) {
 		this.dataDir = dataDirectory;
 	}
 

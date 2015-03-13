@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @since 0.1
  */
 
-public class Record implements java.io.Serializable {
+class Record implements java.io.Serializable {
 
 	// ----- Instance Variables ----- //
 
@@ -55,7 +55,7 @@ public class Record implements java.io.Serializable {
 	 * @return the value stored in the field.
 	 * @since 0.1
 	 */
-	public String getValue (int index) throws Exception {
+	String getValue (int index) throws Exception {
 
 		if (index < values.size()) {
 			return values.get(index);
@@ -71,7 +71,7 @@ public class Record implements java.io.Serializable {
 	 * @return an array of Strings containing the values.
 	 * @since 0.4
 	 */
-	public String[] getValues () {
+	String[] getValues () {
 		return values.toArray(new String[values.size()]);
 	}
 
@@ -82,7 +82,7 @@ public class Record implements java.io.Serializable {
 	 * @param value the value to store in the field.
 	 * @since 0.1
 	 */
-	public void setValue (int index, String value) throws Exception {
+	void setValue (int index, String value) throws Exception {
 
 		if (index < values.size()) {
 			values.set(index, value);		
@@ -97,7 +97,7 @@ public class Record implements java.io.Serializable {
 	 * 
 	 * @since 0.2
 	 */
-	public void addField() {
+	void addField() {
 		values.add(null);
 	}
 
@@ -107,7 +107,7 @@ public class Record implements java.io.Serializable {
 	 * @param index the index of the field to be removed.
 	 * @since 0.2
 	 */
-	public void removeField(int index) throws Exception {
+	void removeField(int index) throws Exception {
 
 		if (index < values.size()) {
 			values.remove(index);		
@@ -123,7 +123,7 @@ public class Record implements java.io.Serializable {
 	 * @return the integer number of fields.
 	 * @since 0.1
 	 */
-	public int noFields () {
+	int noFields () {
 		return values.size();
 	}
 
@@ -135,7 +135,7 @@ public class Record implements java.io.Serializable {
 	 * @param vals An array of values to populate the record with.
 	 * @since 0.1
 	 */
-	public Record (String[] vals) {
+	Record (String[] vals) {
 		this.values = new ArrayList<String>(Arrays.asList(vals));
 	}
 

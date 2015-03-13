@@ -52,8 +52,16 @@ public class Database {
 		dropTable("testTableOne");
 		assert !tables.containsKey("testTableOne") : "Table not dropped.";
 
+		String[] columnsThree = {"colSeven", "colEight", "colNine"};
+		createTable("testTableThree", columnsThree);
+		commit();
+		File testFileThree = new File(dataDir + "testTableThree.ser");
+		assert testFileThree.exists() : "Table not committed correctly.";
+		assert !testFileOne.exists() : "Dropped table not deleted on disk.";
+
 		testFileOne.delete();
 		testFileTwo.delete();
+		testFileThree.delete();
 
 	}
 
@@ -68,7 +76,6 @@ public class Database {
 		String[] tableNames = dataFile.listTables();
 
 		for (String tableName : tableNames) {
-			tableName = tableName.substring(0, tableName.lastIndexOf("."));
 			Table table = dataFile.readTable(tableName);
 			tables.put(tableName, table);
 		}

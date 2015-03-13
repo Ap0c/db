@@ -56,14 +56,14 @@ public class DataFile {
 		"object in file.";
 
 		try {
-			assert listTables()[0].equals("testTable.ser") :
-				"File list incorrect.";
+			assert listTables()[0].equals("testTable") : "File list incorrect.";
 			assert listTables().length == 1 : "Wrong number of files listed.";
 		} catch (IOException e) {
 			throw new Exception("Problem obtaining file list.");
 		}
 
-		test.delete();
+		deleteTable("testTable");
+		assert !test.exists() : "Table file not deleted from disk.";
 
 	}
 
@@ -132,8 +132,19 @@ public class DataFile {
 	 * @since 0.5
 	 */
 	public String[] listTables () throws IOException {
+
 		File dataDirectory = new File(dataDir);
-		return dataDirectory.list();
+		String[] tables = dataDirectory.list();
+
+		for (int i = tables.length - 1; i >= 0; i--) {
+			String table = tables[i];
+			if (table.contains(".")) {
+				tables[i] = table.substring(0, table.lastIndexOf('.'));
+			}
+		}
+
+		return tables;
+
 	}
 
 	// ----- Constructor ----- //

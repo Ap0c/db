@@ -27,7 +27,7 @@ public class DataFile {
 	 * 
 	 * @since 0.3
 	 */
-	private void testDataFile () {
+	private void testDataFile () throws Exception {
 
 		String[] columns = {"colOne", "colTwo", "colThree"};
 		Table table = new Table(columns);
@@ -35,8 +35,7 @@ public class DataFile {
 		try {
 			saveTable(table, fileName);
 		} catch (IOException e) {
-			System.err.println("Problem writing to file.");
-			System.exit(1);
+			throw new IOException("Problem writing to file.", e);
 		}
 
 		File test = new File(dataDir + fileName + ".ser");
@@ -47,11 +46,9 @@ public class DataFile {
 		try {
 			testTable = readTable(fileName);
 		} catch (IOException e) {
-			System.err.println("Problem reading file.");
-			System.exit(1);
+			throw new IOException("Problem reading file.", e);
 		} catch (ClassNotFoundException e) {
-			System.err.println("Class not found in file.");
-			System.exit(1);
+			throw new ClassNotFoundException("Class not found in file.", e);
 		}
 
 		assert testTable != null : "Table not read in correctly.";
@@ -63,8 +60,7 @@ public class DataFile {
 				"File list incorrect.";
 			assert listTables().length == 1 : "Wrong number of files listed.";
 		} catch (IOException e) {
-			System.err.println("Problem obtaining file list.");
-			System.exit(1);
+			throw new Exception("Problem obtaining file list.");
 		}
 
 		test.delete();
@@ -151,8 +147,13 @@ public class DataFile {
 	public static void main(String[] args) {
 
 		DataFile file = new DataFile("bin/data/");
-		file.testDataFile();
-		System.out.println("DataFile tests complete.");
+
+		try {
+			file.testDataFile();
+			System.out.println("DataFile tests complete.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 	

@@ -23,18 +23,13 @@ public class Table implements java.io.Serializable {
 	 * 
 	 * @since 0.2
 	 */
-	private void testTable () {
+	private void testTable () throws Exception {
 
 		assert Arrays.equals(columns.toArray(), getColumns()) : "Table " +
 			"columns not added correctly.";
 
 		String[] values = {"valOne", "valTwo", "valThree"};
-		try {
-			addRow(values);		
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		addRow(values);		
 		assert rows.size() == 1 : "Row not added correctly.";
 		assert rows.get(0).getValue(1).equals("valTwo") : "Row not added " +
 			"correctly";
@@ -45,8 +40,7 @@ public class Table implements java.io.Serializable {
 		} catch (Exception e) {
 			if (!e.getMessage().equals(
 				"Primary key must be unique: " + values[0])) {
-				e.printStackTrace();
-				System.exit(1);
+				throw e;
 			}
 		}
 
@@ -62,16 +56,19 @@ public class Table implements java.io.Serializable {
 		assert columns.size() == 3 : "Column not removed correctly.";
 		assert columns.get(0).equals("colTwo") : "Column not removed " +
 			"correctly.";
-		assert rows.get(0).getValue(3) == null : "Row field not removed " + 
+
+		try {
+			assert rows.get(0).getValue(3) == null : "Row field not removed " + 
 			"correctly.";
+		} catch (Exception e) {
+			if (!e.getMessage().equals("Field does not exist.")) {
+				throw e;
+			}
+		}
 
 		String[] moreValues = {"valFour", "valFive", "valSix"};
-		try {
-			addRow(moreValues);		
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		addRow(moreValues);		
+
 		Record[] retrievedRows = getRows();
 		for (int i = noRecords() - 1; i >= 0; i--) {
 			String[] rowValues = rows.get(i).getValues();
@@ -79,12 +76,7 @@ public class Table implements java.io.Serializable {
 				"Rows not retrieved correctly.";
 		}
 
-		try {
-			deleteRow("valTwo");		
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		deleteRow("valTwo");		
 		assert noRecords() == 1 : "Row not removed correctly.";
 
 	}
@@ -132,7 +124,7 @@ public class Table implements java.io.Serializable {
 	 * @param name the name of the column to be removed.
 	 * @since 0.2
 	 */
-	public void deleteColumn (String name) {
+	public void deleteColumn (String name) throws Exception {
 
 		int fieldIndex = columns.indexOf(name);
 		columns.remove(fieldIndex);
@@ -222,8 +214,12 @@ public class Table implements java.io.Serializable {
 
 		String[] columns = {"colOne", "colTwo", "colThree"};
 		Table table = new Table(columns);
-		table.testTable();
-		System.out.println("Table tests complete.");
+		try {
+			table.testTable();
+			System.out.println("Table tests complete.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

@@ -15,7 +15,7 @@ public class Printer {
 	 * 
 	 * @since 0.4
 	 */
-	private void testPrinter () {
+	private void testPrinter () throws Exception {
 
 		String[] columns = {"colOne", "colTwo", "colThree"};
 		Table table = new Table(columns);
@@ -25,23 +25,13 @@ public class Printer {
 
 		String[] rowOne = {"one", "two", "three"};
 		String[] rowTwo = {"four", "five", "six"};
-		try {
-			table.addRow(rowOne);		
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		try {
-			table.addRow(rowTwo);		
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		table.addRow(rowOne);		
+		table.addRow(rowTwo);		
 
 		System.out.println("Printing rows:");
 		printRows(table.getRows());
 
-		System.out.println("Printing full table:");
+		System.out.println("\nPrinting full table:");
 		printTable(table);
 
 	}
@@ -119,7 +109,13 @@ public class Printer {
 	public static void main(String[] args) {
 
 		Printer printer = new Printer();
-		printer.testPrinter();
+
+		try {
+			printer.testPrinter();
+			System.out.println("\nPrinter tests complete.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

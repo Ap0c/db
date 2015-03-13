@@ -20,15 +20,11 @@ public class Database {
 	 * 
 	 * @since 0.5
 	 */
-	private void testDatabase () {
+	private void testDatabase () throws Exception {
 
 		String[] columnsOne = {"colOne", "colTwo", "colThree"};
-		try {
-			createTable("testTableOne", columnsOne);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+
+		createTable("testTableOne", columnsOne);
 		assert tables.containsKey("testTableOne") : "Table not added correctly";
 
 		Table tableOne = tables.get("testTableOne");
@@ -36,46 +32,24 @@ public class Database {
 			"stored correctly.";
 
 		String[] columnsTwo = {"colFour", "colFive", "colSix"};
-		try {
-			createTable("testTableTwo", columnsTwo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		createTable("testTableTwo", columnsTwo);
 		assert tables.containsKey("testTableTwo") : "Table not added correctly";
 
-		try {
-			writeTables();
-		} catch (IOException e) {
-			System.err.println("Problem writing file.");
-			System.exit(1);
-		}
-
+		writeTables();
 		File testFileOne = new File(dataDir + "testTableOne.ser");
 		File testFileTwo = new File(dataDir + "testTableTwo.ser"); 
 		assert testFileOne.exists() && testFileTwo.exists():
 			"Data file not written correctly.";
 
 		tables.clear();
-		try {
-			buildTables();
-		} catch (Exception e) {
-			System.out.println("Problem reading from files.");
-			System.exit(1);
-		}
-
+		buildTables();
 		assert tables.containsKey("testTableOne") &&
 			tables.containsKey("testTableTwo") : "Tables not built correctly";
 		Table testTable = tables.get("testTableOne");
 		assert Arrays.equals(columnsOne, tableOne.getColumns()) : "Table not " +
 			"built correctly.";
 
-		try {
-			dropTable("testTableOne");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		dropTable("testTableOne");
 		assert !tables.containsKey("testTableOne") : "Table not dropped.";
 
 		testFileOne.delete();
@@ -199,7 +173,7 @@ public class Database {
 			database.testDatabase();
 			System.out.println("Database tests complete.");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

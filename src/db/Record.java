@@ -22,10 +22,16 @@ public class Record implements java.io.Serializable {
 	 * 
 	 * @since 0.1
 	 */
-	private void testRecord () {
+	private void testRecord () throws Exception {
 
 		assert getValue(0).equals("one") : "Got incorrect field value.";
-		assert getValue(3) == null : "Index should be out of range.";
+		try {
+			assert getValue(3) == null : "Index should be out of range.";
+		} catch (Exception e) {
+			if (!e.getMessage().equals("Field does not exist.")) {
+				throw e;
+			}
+		}
 
 		setValue(2, "four");
 		assert values.get(2).equals("four") : "Value not set correctly.";
@@ -49,13 +55,12 @@ public class Record implements java.io.Serializable {
 	 * @return the value stored in the field.
 	 * @since 0.1
 	 */
-	public String getValue (int index) {
+	public String getValue (int index) throws Exception {
 
 		if (index < values.size()) {
 			return values.get(index);
 		} else {
-			System.err.println("Field does not exist.");
-			return null;
+			throw new Exception("Field does not exist.");
 		}
 
 	}
@@ -77,12 +82,12 @@ public class Record implements java.io.Serializable {
 	 * @param value the value to store in the field.
 	 * @since 0.1
 	 */
-	public void setValue (int index, String value) {
+	public void setValue (int index, String value) throws Exception {
 
 		if (index < values.size()) {
 			values.set(index, value);		
 		} else {
-			System.err.println("Field does not exist.");
+			throw new Exception("Field does not exist.");
 		}
 
 	}
@@ -102,12 +107,12 @@ public class Record implements java.io.Serializable {
 	 * @param index the index of the field to be removed.
 	 * @since 0.2
 	 */
-	public void removeField(int index) {
+	public void removeField(int index) throws Exception {
 
 		if (index < values.size()) {
 			values.remove(index);		
 		} else {
-			System.err.println("Field does not exist.");
+			throw new Exception("Field does not exist.");
 		}
 
 	}
@@ -140,8 +145,12 @@ public class Record implements java.io.Serializable {
 
 		String[] values = {"one", "two", "three"};
 		Record record = new Record(values);
-		record.testRecord();
-		System.out.println("Record tests complete.");
+		try {
+			record.testRecord();
+			System.out.println("Record tests complete.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

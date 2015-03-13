@@ -29,7 +29,7 @@ public class Printer {
 		table.addRow(rowTwo);		
 
 		System.out.println("Printing rows:");
-		printRows(table.getRows());
+		printRows(table.getRecords());
 
 		System.out.println("\nPrinting full table:");
 		printTable(table);
@@ -97,7 +97,7 @@ public class Printer {
 	public void printTable (Table table) {
 
 		String[] columns = table.getColumns();
-		Record[] rows = table.getRows();
+		Record[] rows = table.getRecords();
 
 		printColumns(columns);
 		printRows(rows);

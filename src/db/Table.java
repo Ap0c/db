@@ -53,9 +53,9 @@ public class Table implements java.io.Serializable {
 		renameColumn("colFour", "colFive");
 		assert columns.get(3) == "colFive" : "Column not renamed correctly.";
 
-		deleteColumn("colOne");
+		deleteColumn("colTwo");
 		assert columns.size() == 3 : "Column not removed correctly.";
-		assert columns.get(0).equals("colTwo") : "Column not removed " +
+		assert columns.get(1).equals("colThree") : "Column not removed " +
 			"correctly.";
 
 		try {
@@ -70,15 +70,22 @@ public class Table implements java.io.Serializable {
 		String[] moreValues = {"valFour", "valFive", "valSix"};
 		addRow(moreValues);		
 
-		Record[] retrievedRows = getRows();
+		Record[] retrievedRows = getRecords();
 		for (int i = noRecords() - 1; i >= 0; i--) {
 			String[] rowValues = rows.get(i).getValues();
 			assert Arrays.equals(rowValues, retrievedRows[i].getValues()) : 
 				"Rows not retrieved correctly.";
 		}
 
-		deleteRow("valTwo");		
+		deleteRow("valOne");
 		assert noRecords() == 1 : "Row not removed correctly.";
+
+		String[][] stringRows = getRows();
+		for (int i = noRecords() - 1; i >= 0; i--) {
+			String[] rowValues = rows.get(i).getValues();
+			assert Arrays.equals(rowValues, stringRows[i]) : 
+				"Rows not retrieved as Strings correctly.";
+		}
 
 	}
 
@@ -98,8 +105,26 @@ public class Table implements java.io.Serializable {
 	 * @return a Record array containing the rows.
 	 * @since 0.4
 	 */
-	Record[] getRows () {
+	Record[] getRecords () {
 		return rows.toArray(new Record[rows.size()]);
+	}
+
+	/**
+	 * Gets all of the rows in the table as a 2D String array.
+	 * 
+	 * @return a String 2D array containing the rows, in format [row][column].
+	 * @since 0.6
+	 */
+	public String[][] getRows () {
+
+		LinkedList<String[]> returnRows = new LinkedList<String[]>();
+
+		for (Record row : rows) {
+			returnRows.add(row.getValues());
+		}
+
+		return returnRows.toArray(new String[returnRows.size()][]);
+
 	}
 
 	/**

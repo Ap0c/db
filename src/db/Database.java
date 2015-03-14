@@ -1,10 +1,16 @@
-package db;
+// package db;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import java.util.Arrays;
 import java.io.File;
+
+/**
+ * The main class and entry-point for the Database.
+ *
+ * @since 0.5
+ */
 
 public class Database {
 
@@ -107,6 +113,22 @@ public class Database {
 	}
 
 	/**
+	 * Gets a table object by name.
+	 * 
+	 * @param name name of the table to be retrieved.
+	 * @since 0.7
+	 */
+	Table getTable (String name) throws Exception {
+
+		if (tables.containsKey(name)) {
+			return tables.get(name);
+		} else {
+			throw new Exception("Table does not exist.");
+		}
+
+	}
+
+	/**
 	 * Creates a table and adds it to the list of table objects in memory.
 	 * 
 	 * @param name the name of the table to be created.
@@ -119,7 +141,7 @@ public class Database {
 			Table table = new Table(columns);
 			tables.put(name, table);
 		} else {
-			throw new Exception("Error, table already exists.");
+			throw new Exception("Table already exists.");
 		}
 
 	}
@@ -135,7 +157,7 @@ public class Database {
 		if (tables.containsKey(name)) {
 			tables.remove(name);
 		} else {
-			throw new Exception("Error, table does not exist.");
+			throw new Exception("Table does not exist.");
 		}
 
 	}
@@ -151,7 +173,7 @@ public class Database {
 		try {
 			writeTables();
 		} catch (IOException e) {
-			throw new Exception("Error, changes could not be committed.");
+			throw new Exception("Changes could not be committed.");
 		}
 
 	}

@@ -1,4 +1,4 @@
-package db;
+// package db;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -105,7 +105,7 @@ public class Table implements java.io.Serializable {
 	 * @return a Record array containing the rows.
 	 * @since 0.4
 	 */
-	Record[] getRecords () {
+	public Record[] getRecords () {
 		return rows.toArray(new Record[rows.size()]);
 	}
 
@@ -175,9 +175,15 @@ public class Table implements java.io.Serializable {
 	 * @param newName the new name of the column.
 	 * @since 0.2
 	 */
-	public void renameColumn (String oldName, String newName) {
-		int columnIndex = columns.indexOf(oldName);
-		columns.set(columnIndex, newName);
+	public void renameColumn (String oldName, String newName) throws Exception {
+
+		if (columns.contains(oldName)) {
+			int columnIndex = columns.indexOf(oldName);
+			columns.set(columnIndex, newName);
+		} else {
+			throw new Exception("No such column.");
+		}
+		
 	}
 
 	/**
@@ -236,7 +242,7 @@ public class Table implements java.io.Serializable {
 
 	// ----- Constructor ----- //
 
-	public Table (String[] newColumns) {
+	Table (String[] newColumns) {
 		this.columns = new ArrayList<String>(Arrays.asList(newColumns));
 		this.rows = new LinkedList<Record>();
 	}

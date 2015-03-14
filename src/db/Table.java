@@ -253,6 +253,7 @@ public class Table implements java.io.Serializable {
 
 		String[] columns = {"colOne", "colTwo", "colThree"};
 		Table table = new Table(columns);
+
 		try {
 			table.testTable();
 			System.out.println("Table tests complete.");

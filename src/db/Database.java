@@ -18,6 +18,7 @@ public class Database {
 
 	private Map<String, Table> tables;
 	private String dataDir;
+	public Query query;
 
 	// ----- Instance Methods ----- //
 
@@ -190,6 +191,8 @@ public class Database {
 		} catch (Exception e) {
 			throw new Exception("Problem with database directory.");
 		}
+
+		this.query = new Query(this);
 
 	}
 

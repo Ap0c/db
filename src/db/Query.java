@@ -53,6 +53,36 @@ public class Query {
 	}
 
 	/**
+	 * For each row in the table, selects only the columns specified. Populates
+	 * a result list with these reduced rows.
+	 * 
+	 * @param table the Table object being queried.
+	 * @param columns the integer indices of the columns to be selected.
+	 * @return a linked list of the resultant rows.
+	 * @since 0.7
+	 */
+	private LinkedList<String[]> selectResult (Table table, int[] columnIndices)
+		throws Exception {
+
+		Record[] rows = table.getRecords();
+		LinkedList<String[]> result = new LinkedList<String[]>();
+
+		int noCols = columnIndices.length;
+		String[] row = new String[noCols];
+
+		for (Record record : rows) {
+			for (int i = 0; i < noCols; i++) {
+				int field = columnIndices[i];
+				row[i] = record.getValue(field);
+			}
+			result.add(row);
+		}
+
+		return result;
+
+	}
+
+	/**
 	 * Returns array of results showing only specified columns.
 	 * 
 	 * @param table the name of the table being queried.
@@ -62,28 +92,32 @@ public class Query {
 	 */
 	public String[][] select (String table, String[] columns) throws Exception {
 
-		Table selectedTable = db.getTable(table);
-		int noCols = columns.length;
+		Table selectTable = db.getTable(table);
 
-		Record[] rows = selectedTable.getRecords();
-		int noRows = rows.length;
-		int[] selectIndices = columnIndices(selectedTable, columns);
+		int[] columnIndices = columnIndices(selectTable, columns);
+		LinkedList<String[]> result = selectResult(selectTable, columnIndices);
+		int noRows = result.size();
 
-		LinkedList<String[]> resultRows = new LinkedList<String[]>();
-		String[] row = new String[noCols];
-
-		for (Record record : rows) {
-			for (int i = 0; i < noCols; i++) {
-				row[i] = record.getValue(selectIndices[i]);
-			}
-			resultRows.add(row);
-		}
-
-		return resultRows.toArray(new String[noRows][]);
+		return result.toArray(new String[noRows][]);
 
 	}
 
-	public String[][] selectWhere (String table, String[] columns, String[] parameters) {};
+	/**
+	 * Returns array of results showing only specified columns, based upon
+	 * certain criteria.
+	 * 
+	 * @param table the name of the table being queried.
+	 * @param columns an array of names of the columns to be selected.
+	 * @param parameters
+	 * @return a 2D array containing the results of the query.
+	 * @since 0.7
+	 */
+	// public String[][] selectWhere (
+	// 	String table, String[] columns, String[] parameters) {
+
+
+
+	// }
 
 	public class Alter {
 

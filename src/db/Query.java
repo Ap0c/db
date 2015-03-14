@@ -61,7 +61,7 @@ public class Query {
 	 * @return a linked list of the resultant rows.
 	 * @since 0.7
 	 */
-	private LinkedList<String[]> selectResult (Table table, int[] columnIndices)
+	private LinkedList<String[]> resultRows (Table table, int[] columnIndices)
 		throws Exception {
 
 		Record[] rows = table.getRecords();
@@ -83,6 +83,27 @@ public class Query {
 	}
 
 	/**
+	 * Builds a Table with the result rows and specified columns.
+	 * 
+	 * @param rows linked list of the result rows.
+	 * @param columns an array of names of the columns that were selected.
+	 * @return a Table object containing the result.
+	 * @since 0.7
+	 */
+	private Table resultTable (LinkedList<String[]> rows, String[] columns)
+		throws Exception {
+
+		Table table = new Table(columns);
+
+		for (String[] row : rows) {
+			table.addRow(row);
+		}
+
+		return table;
+
+	}
+
+	/**
 	 * Returns array of results showing only specified columns.
 	 * 
 	 * @param table the name of the table being queried.
@@ -90,15 +111,14 @@ public class Query {
 	 * @return a 2D array containing the results of the query.
 	 * @since 0.7
 	 */
-	public String[][] select (String table, String[] columns) throws Exception {
+	public Table select (String table, String[] columns) throws Exception {
 
 		Table selectTable = db.getTable(table);
 
 		int[] columnIndices = columnIndices(selectTable, columns);
-		LinkedList<String[]> result = selectResult(selectTable, columnIndices);
-		int noRows = result.size();
+		LinkedList<String[]> result = resultRows(selectTable, columnIndices);
 
-		return result.toArray(new String[noRows][]);
+		return resultTable(result, columns);
 
 	}
 
@@ -119,42 +139,84 @@ public class Query {
 
 	// }
 
-	public class Alter {
 
-		private Table table;
-
-		public void addColumn (String column) {
-			table.addColumn(column);
-		}
-
-		public void deleteColumn (String column) throws Exception {
-			table.deleteColumn(column);
-		}
-
-		public void renameColumn (String oldName, String newName)
-			throws Exception {
-			table.renameColumn(oldName, newName);
-		}
-
-		public Alter (String tableName) throws Exception {
-			this.table = db.getTable(tableName);
-		}
-
+	/**
+	 * Adds a column to the specified table.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param columns an array of names of the columns to be selected.
+	 * @param value the default value to be placed in the added fields.
+	 * @return a 2D array containing the results of the query.
+	 * @since 0.7
+	 */
+	public void add (String tableName, String column, String value)
+		throws Exception {
+		db.getTable(tableName).addColumn(column, value);
 	}
 
+	/**
+	 * Drops a column from the specified table.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param column the name of the column to be dropped.
+	 * @since 0.7
+	 */
+	public void dropColumn (String tableName, String column)
+		throws Exception {
+		db.getTable(tableName).deleteColumn(column);
+	}
+
+	/**
+	 * Renames a column in the specified table.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param oldName the current name of the column.
+	 * @param newName the new name of the column.
+	 * @since 0.7
+	 */
+	public void rename (String tableName, String oldName, String newName)
+		throws Exception {
+		db.getTable(tableName).renameColumn(oldName, newName);
+	}
+
+	/**
+	 * Inserts a single row into a table.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param values an array of values to be inserted, must be the same length
+	 * as there are number of columns.
+	 * @since 0.7
+	 */
 	public void insert (String tableName, String[] values) throws Exception {
+		db.getTable(tableName).addRow(values);
+	}
+
+	/**
+	 * Inserts a set of rows into a table.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param valSet an array in which each field contains an array of values
+	 * to be inserted. Each values array must be the same length
+	 * as there are number of columns.
+	 * @since 0.7
+	 */
+	public void insert (String tableName, String[][] valSet) throws Exception {
+
 		Table table = db.getTable(tableName);
-		table.addRow(values);
+
+		for (String[] values : valSet) {
+			table.addRow(values);
+		}
+
 	}
 
 	public void delete (String tableName, String primaryKey) throws Exception {
-		Table table = db.getTable(tableName);
-		table.deleteRow(primaryKey);
+		db.getTable(tableName).deleteRow(primaryKey);
 	}
 
-	public void deleteWhere (String table, String[] paremeters) {};
+	// public void deleteWhere (String table, String[] paremeters) {};
 
-	public void update (String table, String[] columns, String[] values, String[] parameters) {};
+	// public void update (String table, String[] columns, String[] values) {};
 
 	// ----- Constructor ----- //
 

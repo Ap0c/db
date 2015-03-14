@@ -41,8 +41,8 @@ class Record implements java.io.Serializable {
 		assert noFields() == 2 : "Field not removed properly.";
 		assert values.get(1).equals("four") : "Field not removed properly.";
 
-		addField();
-		assert getValue(2) == null : "Field not removed properly.";
+		addField("test");
+		assert getValue(2) == "test" : "Field not added properly.";
 		assert Arrays.equals(values.toArray(), getValues()) : "Values got do" +
 			" not match.";
 
@@ -97,8 +97,8 @@ class Record implements java.io.Serializable {
 	 * 
 	 * @since 0.2
 	 */
-	void addField() {
-		values.add(null);
+	void addField(String value) {
+		values.add(value);
 	}
 
 	/**

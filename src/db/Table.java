@@ -45,7 +45,7 @@ public class Table implements java.io.Serializable {
 			}
 		}
 
-		addColumn("colFour");
+		addColumn("colFour", "test");
 		assert columns.size() == 4 : "Column not added correctly.";
 		assert columns.get(3) == "colFour" : "Column not added correctly.";
 		assert rows.get(0).noFields() == 4 : "Row field not added correctly.";
@@ -105,7 +105,7 @@ public class Table implements java.io.Serializable {
 	 * @return a Record array containing the rows.
 	 * @since 0.4
 	 */
-	public Record[] getRecords () {
+	Record[] getRecords () {
 		return rows.toArray(new Record[rows.size()]);
 	}
 
@@ -131,14 +131,16 @@ public class Table implements java.io.Serializable {
 	 * Adds a column to the list of table columns. Also updates the records.
 	 *
 	 * @param name the name of the column to be added.
+	 * @param placeholder the default to be placed in the corresponding fields.
 	 * @since 0.2
 	 */
-	public void addColumn (String name) {
+	public void addColumn (String name, String placeholder) {
 
 		columns.add(name);
+		int noCols = columns.size();
 
 		for (Record row : rows) {
-			row.addField();
+			row.addField(placeholder);
 		}
 
 	}

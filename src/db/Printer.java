@@ -112,7 +112,7 @@ public class Printer {
 
 		try {
 			printer.testPrinter();
-			System.out.println("\nPrinter tests complete.");
+			System.out.println("\nPrinter tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

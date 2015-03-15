@@ -14,8 +14,8 @@ public class Table implements java.io.Serializable {
 
 	// ----- Instance Variables ----- //
 
-	private ArrayList<String> columns;
-	private LinkedList<Record> rows;
+	protected ArrayList<String> columns;
+	protected LinkedList<Record> rows;
  
 	// ----- Instance Methods ----- //
 
@@ -95,7 +95,7 @@ public class Table implements java.io.Serializable {
 	 * @return a string array containing the column names.
 	 * @since 0.2
 	 */
-	public String[] getColumns () {
+	protected String[] getColumns () {
 		return columns.toArray(new String[columns.size()]);
 	}
 
@@ -115,7 +115,7 @@ public class Table implements java.io.Serializable {
 	 * @return a String 2D array containing the rows, in format [row][column].
 	 * @since 0.6
 	 */
-	public String[][] getRows () {
+	protected String[][] getRows () {
 
 		LinkedList<String[]> returnRows = new LinkedList<String[]>();
 
@@ -134,7 +134,7 @@ public class Table implements java.io.Serializable {
 	 * @param placeholder the default to be placed in the corresponding fields.
 	 * @since 0.2
 	 */
-	public void addColumn (String name, String placeholder) {
+	protected void addColumn (String name, String placeholder) {
 
 		columns.add(name);
 		int noCols = columns.size();
@@ -152,18 +152,19 @@ public class Table implements java.io.Serializable {
 	 * @param name the name of the column to be removed.
 	 * @since 0.2
 	 */
-	public void deleteColumn (String name) throws Exception {
+	void deleteColumn (String name) throws Exception {
+
+		if (!columns.contains(name)) {
+			throw new Exception("Column does not exist.");
+		}
 
 		int fieldIndex = columns.indexOf(name);
 
 		if (fieldIndex != 0) {
-
 			columns.remove(fieldIndex);
-
 			for (Record row : rows) {
 				row.removeField(fieldIndex);
 			}
-
 		} else {
 			throw new Exception("Cannot delete primary key.");
 		}
@@ -177,7 +178,8 @@ public class Table implements java.io.Serializable {
 	 * @param newName the new name of the column.
 	 * @since 0.2
 	 */
-	public void renameColumn (String oldName, String newName) throws Exception {
+	protected void renameColumn (String oldName, String newName)
+		throws Exception {
 
 		if (columns.contains(oldName)) {
 			int columnIndex = columns.indexOf(oldName);
@@ -194,7 +196,7 @@ public class Table implements java.io.Serializable {
 	 * @param values the values to populate the row being added.
 	 * @since 0.2
 	 */
-	public void addRow (String[] values) throws Exception {
+	protected void addRow (String[] values) throws Exception {
 
 		if (values.length != columns.size()) {
 			throw new Exception("Incorrect number of values.");
@@ -219,7 +221,7 @@ public class Table implements java.io.Serializable {
 	 * @param primaryKey the primary-key of the row to be deleted.
 	 * @since 0.2
 	 */
-	public void deleteRow (String primaryKey) throws Exception {
+	void deleteRow (String primaryKey) throws Exception {
 
 		for (Record row : rows) {
 			if (row.getValue(0).equals(primaryKey)) {
@@ -238,7 +240,7 @@ public class Table implements java.io.Serializable {
 	 * @return the integer number of rows.
 	 * @since 0.2
 	 */
-	public int noRecords () {
+	protected int noRecords () {
 		return rows.size();		
 	}
 
@@ -258,7 +260,7 @@ public class Table implements java.io.Serializable {
 
 		try {
 			table.testTable();
-			System.out.println("Table tests complete.");
+			System.out.println("Table tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

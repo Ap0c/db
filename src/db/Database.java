@@ -205,7 +205,7 @@ public class Database {
 		try {
 			Database database = new Database("bin/data/");
 			database.testDatabase();
-			System.out.println("Database tests complete.");
+			System.out.println("Database tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

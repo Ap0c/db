@@ -69,7 +69,7 @@ public class Query {
 
 		String[] subCols = {"firstCol", "colFour"};
 		Table result = select("testTable", subCols);
-		assert result.getColumns().equals(subCols) :
+		assert Arrays.equals(result.getColumns(), subCols) :
 			"Selection columns incorrect.";
 		String[] firstRow = {"valOne", "default"};
 		assert Arrays.equals(result.getRows()[0], firstRow) :
@@ -78,10 +78,12 @@ public class Query {
 			"Selection returns incorrect object.";
 
 		db.query.delete("testTable", "valFour");
+		result = db.getTable("testTable");
 		String[][] tableRows = result.getRows();
 		assert tableRows.length == 2 : "Row not deleted correctly.";
-		String[] secondRow = {"valSeven", "default"};
-		assert tableRows[1].equals(secondRow) : "Row not deleted correctly.";
+		String[] secondRow = {"valSeven", "valNine", "default"};
+		assert Arrays.equals(tableRows[1], secondRow) :
+			"Row not deleted correctly.";
 
 	}
 
@@ -156,10 +158,10 @@ public class Query {
 	 * @return a Table object containing the result.
 	 * @since 0.7
 	 */
-	private Table resultTable (LinkedList<String[]> rows, String[] columns)
+	private ResultTable selectTable (LinkedList<String[]> rows, String[] cols)
 		throws Exception {
 
-		Table table = new Table(columns);
+		ResultTable table = new ResultTable(cols);
 
 		for (String[] row : rows) {
 			table.addRow(row);
@@ -177,14 +179,14 @@ public class Query {
 	 * @return a 2D array containing the results of the query.
 	 * @since 0.7
 	 */
-	public Table select (String table, String[] columns) throws Exception {
+	public ResultTable select (String table, String[] cols) throws Exception {
 
 		Table selectTable = db.getTable(table);
 
-		int[] columnIndices = columnIndices(selectTable, columns);
+		int[] columnIndices = columnIndices(selectTable, cols);
 		LinkedList<String[]> result = resultRows(selectTable, columnIndices);
 
-		return resultTable(result, columns);
+		return selectTable(result, cols);
 
 	}
 
@@ -282,7 +284,7 @@ public class Query {
 		try {
 			Database database = new Database("bin/data/");
 			database.query.testQuery();
-			System.out.println("Query tests complete.");
+			System.out.println("Query tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -147,7 +147,7 @@ class Record implements java.io.Serializable {
 		Record record = new Record(values);
 		try {
 			record.testRecord();
-			System.out.println("Record tests complete.");
+			System.out.println("Record tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

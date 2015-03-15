@@ -161,7 +161,7 @@ class DataFile {
 
 		try {
 			file.testDataFile();
-			System.out.println("DataFile tests complete.");
+			System.out.println("DataFile tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

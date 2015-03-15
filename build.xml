@@ -9,15 +9,27 @@
 	</target>
 
 	<target name="test" depends="compile">
-		<assertions>
-			<enable />
-		</assertions>
-		<java fork="true" classpath="bin" classname="db.Record" />
-		<java fork="true" classpath="bin" classname="db.Table" />
-		<java fork="true" classpath="bin" classname="db.DataFile" />
-		<java fork="true" classpath="bin" classname="db.Database" />
-		<java fork="true" classpath="bin" classname="db.Query" />
-		<java fork="true" classpath="bin" classname="db.Printer" />	
+		<java fork="true" classpath="bin" classname="db.Record">
+			<jvmarg value="-ea"/>
+		</java>
+		<java fork="true" classpath="bin" classname="db.Table">
+			<jvmarg value="-ea"/>
+		</java>
+		<java fork="true" classpath="bin" classname="db.DataFile">
+			<jvmarg value="-ea"/>
+		</java>
+		<java fork="true" classpath="bin" classname="db.Database">
+			<jvmarg value="-ea"/>
+		</java>
+		<java fork="true" classpath="bin" classname="db.Query">
+			<jvmarg value="-ea" />
+		</java>
+		<java fork="true" classpath="bin" classname="db.Printer">
+			<jvmarg value="-ea"/>
+		</java>
+		<java fork="true" classpath="bin" classname="db.ResultTable">
+			<jvmarg value="-ea"/>
+		</java>
 	</target>
 
 </project>

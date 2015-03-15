@@ -1,4 +1,4 @@
-// package db;
+package db;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +33,8 @@ public class Database {
 
 		createTable("testTableOne", columnsOne);
 		assert tables.containsKey("testTableOne") : "Table not added correctly";
+		assert tables.get("testTableOne") == getTable("testTableOne") :
+			"Table not retrieved correctly.";
 
 		Table tableOne = tables.get("testTableOne");
 		assert Arrays.equals(columnsOne, tableOne.getColumns()) : "Table not " +

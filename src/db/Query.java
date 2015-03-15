@@ -1,11 +1,11 @@
-// package db;
+package db;
 
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Handles all querying of the database, all read and update operations.
+ * Handles querying of the database.
  *
  * @since 0.7
  */
@@ -18,6 +18,56 @@ public class Query {
 
 
 	// ----- Instance Methods ----- //
+
+	/**
+	 * Tests the methods in the Query class, must be run with -ea.
+	 * 
+	 * @since 0.7
+	 */
+	private void testQuery () throws Exception {
+
+		String[] columns = {"colOne", "colTwo", "colThree"};
+		db.createTable("testTable", columns);
+
+		String[] selectCols = {"colOne", "colThree"};
+		int[] indices = columnIndices(db.getTable("testTable"), selectCols);
+		assert Arrays.equals(indices, new int[]{0, 2}) : 
+			"Column indices not obtained correctly.";
+
+		String[] values = {"valOne", "valTwo", "valThree"};
+		db.query.insert("testTable", values);
+		Table testTable = db.getTable("testTable");
+		assert Arrays.equals(testTable.getRows()[0], values) :
+			"Values not inserted correctly.";
+
+		String[][] moreValues = {{"valFour", "valFive", "valSix"},
+			{"valSeven", "valEight", "valNine"}};
+		db.query.insert("testTable", moreValues);
+		testTable = db.getTable("testTable");
+		assert Arrays.equals(testTable.getRows()[1], moreValues[0]) :
+			"Multiple values not inserted correctly.";
+		assert Arrays.equals(testTable.getRows()[2], moreValues[1]) :
+			"Multiple values not inserted correctly.";
+
+		db.query.add("testTable", "colFour", "default");
+		testTable = db.getTable("testTable");
+		assert testTable.getColumns()[3].equals("colFour") :
+			"Column not added correctly.";
+		assert testTable.getRows()[0][3].equals("default") :
+			"Default values not inserted on column add.";
+
+		db.query.rename("testTable", "colOne", "firstCol");
+		testTable = db.getTable("testTable");
+		assert testTable.getColumns()[0].equals("firstCol") :
+			"Column not renamed correctly.";
+
+		db.query.dropColumn("testTable", "colTwo");
+		testTable = db.getTable("testTable");
+		String[] newCols = testTable.getColumns();
+		assert newCols.length == 3 && newCols[1].equals("colThree") :
+			"Column not deleted correctly.";
+
+	}
 
 	/**
 	 * Gets the indices of columns to be selected.
@@ -123,24 +173,6 @@ public class Query {
 	}
 
 	/**
-	 * Returns array of results showing only specified columns, based upon
-	 * certain criteria.
-	 * 
-	 * @param table the name of the table being queried.
-	 * @param columns an array of names of the columns to be selected.
-	 * @param parameters
-	 * @return a 2D array containing the results of the query.
-	 * @since 0.7
-	 */
-	// public String[][] selectWhere (
-	// 	String table, String[] columns, String[] parameters) {
-
-
-
-	// }
-
-
-	/**
 	 * Adds a column to the specified table.
 	 * 
 	 * @param tableName the name of the table being queried.
@@ -210,18 +242,35 @@ public class Query {
 
 	}
 
+	/**
+	 * Deletes a row in the table by its primary key.
+	 * 
+	 * @param tableName the name of the table being queried.
+	 * @param primaryKey the primary key of the row to be deleted.
+	 * @since 0.7
+	 */
 	public void delete (String tableName, String primaryKey) throws Exception {
 		db.getTable(tableName).deleteRow(primaryKey);
 	}
-
-	// public void deleteWhere (String table, String[] paremeters) {};
-
-	// public void update (String table, String[] columns, String[] values) {};
 
 	// ----- Constructor ----- //
 
 	Query (Database database) {
 		this.db = database;
+	}
+
+	// ----- Main ----- //
+
+	public static void main(String[] args) {
+
+		try {
+			Database database = new Database("bin/data/");
+			database.query.testQuery();
+			System.out.println("Query tests complete.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

@@ -1,0 +1,19 @@
+<project name="DB" basedir=".">
+
+	<target name="clean">
+		<delete dir="bin/db" />
+	</target>
+
+	<target name="compile">
+		<javac debug="true" includeantruntime="false" srcdir="src" destdir="bin" />
+	</target>
+
+	<target name="test" depends="compile">
+		<java fork="true" classpath="bin" classname="db.Query">
+			<assertions>
+				<enable />
+			</assertions>
+		</java>
+	</target>
+
+</project>

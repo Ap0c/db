@@ -16,6 +16,7 @@ public class Table implements java.io.Serializable {
 
 	protected ArrayList<String> columns;
 	protected LinkedList<Record> rows;
+	public Printer print;
  
 	// ----- Instance Methods ----- //
 
@@ -249,6 +250,7 @@ public class Table implements java.io.Serializable {
 	Table (String[] newColumns) {
 		this.columns = new ArrayList<String>(Arrays.asList(newColumns));
 		this.rows = new LinkedList<Record>();
+		this.print = new Printer(this);
 	}
 
 	// ----- Main ----- //

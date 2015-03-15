@@ -16,7 +16,6 @@ public class Query {
 
 	private Database db;
 
-
 	// ----- Instance Methods ----- //
 
 	/**

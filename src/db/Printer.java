@@ -6,7 +6,11 @@ package db;
  * @since 0.4
  */
 
-public class Printer {
+class Printer implements java.io.Serializable {
+
+	// ----- Instance Variables ----- //
+
+	private Table table;
 
 	// ----- Instance Methods ----- //
 
@@ -17,11 +21,8 @@ public class Printer {
 	 */
 	private void testPrinter () throws Exception {
 
-		String[] columns = {"colOne", "colTwo", "colThree"};
-		Table table = new Table(columns);
-
 		System.out.println("Printing columns:");
-		printColumns(columns);
+		columns();
 
 		String[] rowOne = {"one", "two", "three"};
 		String[] rowTwo = {"four", "five", "six"};
@@ -29,10 +30,10 @@ public class Printer {
 		table.addRow(rowTwo);		
 
 		System.out.println("Printing rows:");
-		printRows(table.getRecords());
+		rows();
 
 		System.out.println("\nPrinting full table:");
-		printTable(table);
+		all();
 
 	}
 
@@ -42,29 +43,13 @@ public class Printer {
 	 * @param rows an array of Record objects.
 	 * @since 0.4
 	 */
-	private void printRows (Record[] rows) {
+	private void rows () {
 
-		for (Record row : rows) {
-			printRow(row);
+		int noRows = table.noRecords();
+
+		for (int i = 0; i < noRows; i++) {
+			row(i);
 		}
-
-	}
-
-	/**
-	 * Prints out the columns of a table.
-	 *
-	 * @param columns an array containing the column names.
-	 * @since 0.4
-	 */
-	public void printColumns (String[] columns) {
-
-		System.out.print("||");
-
-		for (String attr : columns) {
-			System.out.print(" " + attr + " ||");
-		}
-
-		System.out.print("\n\n");
 
 	}
 
@@ -74,9 +59,9 @@ public class Printer {
 	 * @param row a Record object.
 	 * @since 0.4
 	 */
-	public void printRow (Record row) {
+	private void row (int rowNumber) {
 
-		String[] values = row.getValues();
+		String[] values = table.getRows()[rowNumber];
 
 		System.out.print("|");
 
@@ -89,29 +74,54 @@ public class Printer {
 	}
 
 	/**
+	 * Prints out the columns of a table.
+	 *
+	 * @param columns an array containing the column names.
+	 * @since 0.4
+	 */
+	public void columns () {
+
+		System.out.print("||");
+
+		for (String attr : table.getColumns()) {
+			System.out.print(" " + attr + " ||");
+		}
+
+		System.out.print("\n\n");
+
+	}
+
+	/**
 	 * Prints out a table, with columns.
 	 *
 	 * @param table the table to be printed.
 	 * @since 0.4
 	 */
-	public void printTable (Table table) {
+	public void all () {
 
-		String[] columns = table.getColumns();
+		String[] cols = table.getColumns();
 		Record[] rows = table.getRecords();
 
-		printColumns(columns);
-		printRows(rows);
+		columns();
+		rows();
 
+	}
+
+	// ----- Constructor ----- //
+
+	Printer (Table table) {
+		this.table = table;
 	}
 
 	// ----- Main ----- //
 
 	public static void main(String[] args) {
 
-		Printer printer = new Printer();
+		String[] cols = {"colOne", "colTwo", "colThree"};
+		Table table = new Table(cols);
 
 		try {
-			printer.testPrinter();
+			table.print.testPrinter();
 			System.out.println("\nPrinter tests complete.\n");
 		} catch (Exception e) {
 			e.printStackTrace();

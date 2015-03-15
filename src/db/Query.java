@@ -67,6 +67,22 @@ public class Query {
 		assert newCols.length == 3 && newCols[1].equals("colThree") :
 			"Column not deleted correctly.";
 
+		String[] subCols = {"firstCol", "colFour"};
+		Table result = select("testTable", subCols);
+		assert result.getColumns().equals(subCols) :
+			"Selection columns incorrect.";
+		String[] firstRow = {"valOne", "default"};
+		assert Arrays.equals(result.getRows()[0], firstRow) :
+			"Selection rows incorrect.";
+		assert result.getRows()[0].length == 2 :
+			"Selection returns incorrect object.";
+
+		db.query.delete("testTable", "valFour");
+		String[][] tableRows = result.getRows();
+		assert tableRows.length == 2 : "Row not deleted correctly.";
+		String[] secondRow = {"valSeven", "default"};
+		assert tableRows[1].equals(secondRow) : "Row not deleted correctly.";
+
 	}
 
 	/**
@@ -118,9 +134,9 @@ public class Query {
 		LinkedList<String[]> result = new LinkedList<String[]>();
 
 		int noCols = columnIndices.length;
-		String[] row = new String[noCols];
 
 		for (Record record : rows) {
+			String[] row = new String[noCols];
 			for (int i = 0; i < noCols; i++) {
 				int field = columnIndices[i];
 				row[i] = record.getValue(field);

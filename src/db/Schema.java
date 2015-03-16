@@ -26,7 +26,44 @@ public class Schema {
 	 */
 	private void testSchema () throws Exception {
 
-		
+		String[] cols = {"colOne", "colTwo", "colThree"};
+		createTable("testTable", cols);
+		assert noTables == 1 : "Table counter not updated.";
+		assert tables.containsKey("testTable") : "Table name not added.";
+		assert Arrays.equals(tables.get("testTable").toArray(), cols) :
+			"Columns not added correctly.";
+
+		dropColumn("testTable", "colThree");
+		assert tables.get("testTable").size() == 2 : "Column not removed.";
+		String[] reducedCols = {"colOne", "colTwo"};
+		assert Arrays.equals(tables.get("testTable").toArray(), reducedCols) :
+			"Column not removed correctly.";
+
+		addColumn("testTable", "lastCol");
+		assert tables.get("testTable").size() == 3 : "Column not added.";
+		String[] addedCols = {"colOne", "colTwo", "lastCol"};
+		assert Arrays.equals(tables.get("testTable").toArray(), addedCols) :
+			"Column not added correctly.";
+
+		renameColumn("testTable", "lastCol", "endCol");
+		String[] alteredCols = {"colOne", "colTwo", "endCol"};
+		assert Arrays.equals(tables.get("testTable").toArray(), alteredCols) :
+			"Column not renamed correctly.";
+
+		String[] newCols = {"colFour", "colFive", "colSix"};
+		createTable("testTableTwo", newCols);
+		assert Arrays.equals(table("testTableTwo"), newCols) :
+			"Table data not retrieved correctly.";
+
+		Map<String, String[]> allTables = all();
+		assert allTables.containsKey("testTable") &&
+			allTables.containsKey("testTableTwo") : "Tables not retrieved.";
+		assert Arrays.equals(allTables.get("testTable"), alteredCols) :
+			"Columns not retrieved correctly.";
+
+		dropTable("testTable");
+		assert noTables == 1 : "Tables not reduced correctly.";
+		assert !tables.containsKey("testTable") : "Table not dropped.";
 
 	}
 

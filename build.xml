@@ -8,6 +8,10 @@
 		<javac debug="true" includeantruntime="false" srcdir="src" destdir="bin" />
 	</target>
 
+	<target name="demo" depends="compile">
+		<java classpath="bin" classname="Demo" />
+	</target>
+
 	<target name="test" depends="compile">
 		<java fork="true" classpath="bin" classname="db.Record">
 			<jvmarg value="-ea"/>

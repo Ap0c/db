@@ -6,7 +6,7 @@ package db;
  * @since 0.4
  */
 
-class Printer implements java.io.Serializable {
+public class Printer implements java.io.Serializable {
 
 	// ----- Instance Variables ----- //
 
@@ -100,6 +100,7 @@ class Printer implements java.io.Serializable {
 
 		columns();
 		rows();
+		System.out.print("\n");
 
 	}
 

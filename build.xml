@@ -30,6 +30,13 @@
 		<java fork="true" classpath="bin" classname="db.ResultTable">
 			<jvmarg value="-ea"/>
 		</java>
+		<java fork="true" classpath="bin" classname="db.Schema">
+			<jvmarg value="-ea"/>
+		</java>
+	</target>
+
+	<target name="doc">
+		<javadoc destdir="doc" sourcepath="src" packagenames="db" Package="true" />
 	</target>
 
 </project>

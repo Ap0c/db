@@ -19,6 +19,7 @@ public class Database {
 	private Map<String, Table> tables;
 	private String dataDir;
 	public Query query;
+	public Schema schema;
 
 	// ----- Instance Methods ----- //
 
@@ -147,6 +148,8 @@ public class Database {
 			throw new Exception("Table already exists.");
 		}
 
+		schema.createTable(name, columns);
+
 	}
 
 	/**
@@ -162,6 +165,8 @@ public class Database {
 		} else {
 			throw new Exception("Table does not exist.");
 		}
+
+		schema.dropTable(name);
 
 	}
 
@@ -195,6 +200,7 @@ public class Database {
 		}
 
 		this.query = new Query(this);
+		this.schema = new Schema();
 
 	}
 

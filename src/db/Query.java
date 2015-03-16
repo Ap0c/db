@@ -157,7 +157,7 @@ public class Query {
 	 * @return a Table object containing the result.
 	 * @since 0.7
 	 */
-	private ResultTable selectTable (LinkedList<String[]> rows, String[] cols)
+	private ResultTable selection (LinkedList<String[]> rows, String[] cols)
 		throws Exception {
 
 		ResultTable table = new ResultTable(cols);
@@ -174,8 +174,8 @@ public class Query {
 	 * Returns array of results showing only specified columns.
 	 * 
 	 * @param table the name of the table being queried.
-	 * @param columns an array of names of the columns to be selected.
-	 * @return a 2D array containing the results of the query.
+	 * @param cols an array of names of the columns to be selected.
+	 * @return a ResultTable containing the results of the query.
 	 * @since 0.7
 	 */
 	public ResultTable select (String table, String[] cols) throws Exception {
@@ -185,7 +185,7 @@ public class Query {
 		int[] columnIndices = columnIndices(selectTable, cols);
 		LinkedList<String[]> result = resultRows(selectTable, columnIndices);
 
-		return selectTable(result, cols);
+		return selection(result, cols);
 
 	}
 
@@ -193,14 +193,14 @@ public class Query {
 	 * Adds a column to the specified table.
 	 * 
 	 * @param tableName the name of the table being queried.
-	 * @param columns an array of names of the columns to be selected.
+	 * @param column the name of the column to be added.
 	 * @param value the default value to be placed in the added fields.
-	 * @return a 2D array containing the results of the query.
 	 * @since 0.7
 	 */
 	public void add (String tableName, String column, String value)
 		throws Exception {
 		db.getTable(tableName).addColumn(column, value);
+		db.schema.addColumn(tableName, column);
 	}
 
 	/**
@@ -213,6 +213,7 @@ public class Query {
 	public void dropColumn (String tableName, String column)
 		throws Exception {
 		db.getTable(tableName).deleteColumn(column);
+		db.schema.dropColumn(tableName, column);
 	}
 
 	/**
@@ -226,6 +227,7 @@ public class Query {
 	public void rename (String tableName, String oldName, String newName)
 		throws Exception {
 		db.getTable(tableName).renameColumn(oldName, newName);
+		db.schema.renameColumn(tableName, oldName, newName);
 	}
 
 	/**

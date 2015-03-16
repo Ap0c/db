@@ -40,7 +40,6 @@ class Printer implements java.io.Serializable {
 	/**
 	 * Prints out the rows of a table.
 	 *
-	 * @param rows an array of Record objects.
 	 * @since 0.4
 	 */
 	private void rows () {
@@ -56,7 +55,6 @@ class Printer implements java.io.Serializable {
 	/**
 	 * Prints out a single Record.
 	 *
-	 * @param row a Record object.
 	 * @since 0.4
 	 */
 	private void row (int rowNumber) {
@@ -76,7 +74,6 @@ class Printer implements java.io.Serializable {
 	/**
 	 * Prints out the columns of a table.
 	 *
-	 * @param columns an array containing the column names.
 	 * @since 0.4
 	 */
 	public void columns () {
@@ -94,7 +91,6 @@ class Printer implements java.io.Serializable {
 	/**
 	 * Prints out a table, with columns.
 	 *
-	 * @param table the table to be printed.
 	 * @since 0.4
 	 */
 	public void all () {

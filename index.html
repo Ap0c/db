@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>DB by Ap0c</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">DB</h1>
+      <h2 class="project-tagline">Simple database engine written in Java.</h2>
+      <a href="https://github.com/Ap0c/db" class="btn">View on GitHub</a>
+      <a href="https://github.com/Ap0c/db/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Ap0c/db/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h1>
+
+<p>This database application is designed to act as a package for other Java applications. Its functionality is derived from the core Database object, which may be imported and used to manage a database. All methods are accessed through this database object, either directly, or through the two component objects, <code>query</code> and <code>schema</code>. The intention behind this is to create a simple and clear API for other developers to use when they wish to leverage this database system. A simple program, <code>Demo</code>, has been created to demonstrate how this package may be utilised for use in an application.</p>
+
+<p>This project has been built against Java 8u40, and uses <a href="http://ant.apache.org">Apache Ant</a> (v1.9.4) for building and running tests. Please view the README for instructions on how to build and test the application.</p>
+
+<h1>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h1>
+
+<p>Documentation for the source code was generated using the javadoc tool. It contains information about methods and classes, including parameters, return values, and the version in which they were introduced. The generated docs may be viewed in the <code>doc</code> directory, via <code>index.html</code>.</p>
+
+<h1>
+<a id="class-by-class-breakdown" class="anchor" href="#class-by-class-breakdown" aria-hidden="true"><span class="octicon octicon-link"></span></a>Class by Class Breakdown</h1>
+
+<h2>
+<a id="record" class="anchor" href="#record" aria-hidden="true"><span class="octicon octicon-link"></span></a>Record</h2>
+
+<p>This class handles storing a single record in the database, i.e. a row. It stores the values in the row in a list of Strings. This list is kept private to prevent possible corruption of the information by any careless external code. Furthermore, a list is used here in place of a simple array due to the fact that the data may be queried or altered fairly often. The ArrayList class offers a number of useful methods that simplify implementing these requirements.</p>
+
+<p>The methods for this class consist largely of getters and setters, for retrieving and updating the data stored, in addition to options for adding and removing data fields. None of the methods, nor the class, are visible outside of the package, as it is intended that users will view the data at a higher level (tables) than through individual records. This is also better for data integrity, as data can then only be modified through clearly definied interfaces.</p>
+
+<h2>
+<a id="table" class="anchor" href="#table" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table</h2>
+
+<p>This class provides an object for the common core component of a database, the table. It stores a group of records (rows) as a LinkedList. This is done for performance reasons, as it will likely be common for records to be added or removed. In a linked list this should only require a simple update of two pointers and possibly an allocation of a single element, whereas an array or ArrayList will likely require reallocation of the entire entry set. This class also stores the columns for the table as a list of Strings, with an ArrayList being used here for the same reasons as for Record values, as discussed above.</p>
+
+<p>The table also contains an instance of the Printer object, which is covered in more detail below. The reason for keeping the code for printing tables in an independent object is to separate out user interaction (shell printout) from the logical code contained in the table object. The reason for connecting it to the table at all is to provide a simplified interface for the user. Tables may be printed simply by accessing the printer object they contain, rather than by having to instantiate a new object and pass the table to it. Furthermore, the printer object itself is only used to print tables, so functionally it only makes sense when tied to the Table object.</p>
+
+<p>The collection of methods that come with Table mainly deal with retrieving and altering information about the columns and rows. Whenever data is retrieved it is presented in standard arrays, as opposed to lists, in an attempt to simplify the user's interaction with the class. It is intended that the user should be able to choose whether or not they want to engage higher-level data structures, like lists, in their code. Furthermore, as with the Record class, the Table class and its methods are package-private, as it is intended that the user will interact with the database through clearly-defined methods at the level of the Database class.</p>
+
+<h2>
+<a id="database" class="anchor" href="#database" aria-hidden="true"><span class="octicon octicon-link"></span></a>Database</h2>
+
+<p>This class is considered the core object for the database application. It contains the set of tables through a list of Table objects, and provides the user with access via the Query and Schema objects. The idea is that all functionality of the database may be used in an application through the Database object, and thus this is the only class that has a public constructor.</p>
+
+<p>The tables contained in the database are stored as a Map, with the table name as the key and the Table object as the value. This provides rapid retrieval of the tables and allows a simple check on whether a given table exists. The database itself is tied to a particular directory on disk, as it needs somewhere to store the table files (handled by the DataFile object). The location of this directory is stored in the <code>dataDir</code> variable, and when a Database object is instantiated, any table files stored here will be loaded into memory.</p>
+
+<p>Access to table data, and the ability to update and modify it, is provided through the Query object, an instance of which is created when the Database is instantiated. The intention was to create a clean, simple API for a user, whereby database operatins can be performed through a simple <code>db.query.$&lt;$query\_type$&gt;$()</code> method call. All operations on the tables in the database go through this query interface, apart from <code>commit()</code>, <code>createTable()</code> and <code>dropTable()</code>, which are methods called directly from the database object due to the fact that they alter data in this object. They could have been included in the query class, but the preference was to attempt to maintain data encapsulation as much as possible. The database also contains an instance of the Schema object, which is discussed more in the Schema section below.</p>
+
+<h2>
+<a id="datafile" class="anchor" href="#datafile" aria-hidden="true"><span class="octicon octicon-link"></span></a>DataFile</h2>
+
+<p>This class is responsible for all manipulation of files on disk. Its purpose is to read and write table object to disk whenever it is require to do so by the main Database object. When a database is instantiated, this object is called upon to read and return all the tables stored in the specified data directory. For this reason it maintains the location of the data directory where these files are stored in <code>dataDir</code>. Whenever the <code>commit()</code> method is called from the database object, the <code>saveTable()</code> and <code>deleteTable()</code> methods in this object are used to update the tables stored on disk to keep them in line with those stored in memory.</p>
+
+<p>To store table object in data files this class makes use of Java's object serialisation capabilities. It takes a table, including any objects it contains, and converts the state into a byte stream that may be saved to disk. For this reason, some of the classes in this package, including Table and Record, implement the Serializable interface, which allows them to be manipulated in this way. The decision to create the data files in this way, instead using delimited text files, was made to simplify the DataFile class, and to hopefully reduce the risk of bugs due to incorrectly formatted data. Finally, the DataFile object also contains a simply method used to retrieve a list of the tables stored on disk.</p>
+
+<h2>
+<a id="query" class="anchor" href="#query" aria-hidden="true"><span class="octicon octicon-link"></span></a>Query</h2>
+
+<p>This class is responsible for almost all of the operations performed on the data. The intention was to provide a single, clear API that could be leveraged by a user to interact with the database. Containing it largely in this single class reduces the complexity created by having to use methods spread out across a number of different objects. Furthermore, it should make it relatively straightforward for an application developer produce an SQL-like textual or graphical interface for the database, as most calls will simply be wrapper methods around those defined here.</p>
+
+<p>The query object is instantiated along with the main database object. It retains a reference to this main object in <code>db</code>, so that it may carry out its operations on the tables stored there. A number of its methods, such as <code>add</code>, <code>rename</code> and <code>delete</code> simply combine such methods already present in the Schema and Table classes. The select method, however, is rather more complex, and is split across a number of other private methods. In general, the methods defined here are designed to mimic a subset of the functionality defined in SQL. Also, note that the insert method has been overloaded, to allow rows to be added either one at a time, or en masse.</p>
+
+<h2>
+<a id="resulttable" class="anchor" href="#resulttable" aria-hidden="true"><span class="octicon octicon-link"></span></a>ResultTable</h2>
+
+<p>This class has been designed primarily to work with the select method present in the query class. Originally, the select was intended to produce a 2D array containing the rows requested. However, this left the problem of including column names in the result. Therefore, it was decided that since a table object already existed to handle table-like data, it made sense to use it to present results of queries too, just as many SQL databases do. This also had the benefit of allowing the user access to a number of methods like <code>renameColumn()</code> and <code>addRow()</code> for free, which may be useful for them in formatting and presenting their data.</p>
+
+<p>However, the default Table class contained certain methods that it would be best for the user not to have access to, and also came with the restriction of primary keys, which are not necessary on a result set. It was considered that perhaps some methods, such as those that dealy with primary keys, could be made package-private, and public versions without the key restrictions could be added in their place. This, though, meant bloating the Table class with methods unnecessary to its default use-case. Therefore, as the result table was a logical extension of the Table class in any case, the decision was made to subclass Table and overwrite methods as needed. That way, any methods that the subclass needed could become protected (still keeping them package-private), and any that it did not need could remain as they were.</p>
+
+<h2>
+<a id="printer" class="anchor" href="#printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Printer</h2>
+
+<p>This class was originally standalone, and required a table object to be passed to it for printout. However, it was decided that all the functionality it provided could be considered simply an extension to the Table class, so it made sense to include it as a component of a table object. Thus, when a table is instantiated, a printer object is instantiated with it, and retains a reference to the outer Table object in the variable <code>table</code>. The reason for still maintaining Printer as a separate class is to avoid polluting the Table class with a number of user-facing printout methods, which are not relevant to its core functionality.</p>
+
+<p>There are relatively few methods included with Printer. A couple of private methods exist for printing a single row and multiple rows respectively. The only two public methods are <code>columns</code>, for printing out just the columns of a table, and <code>all</code> for printing a table in its entirety. These methods may be accessed from a table object (likely a ResultTable object) via <code>table.print.$&lt;$print\_method$&gt;$()</code>.</p>
+
+<h2>
+<a id="schema" class="anchor" href="#schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schema</h2>
+
+<p>This class is designed to implement catalog-like functionality. Its purpose is to maintain metadata about the database, such as a list of tables and their columns. It stores this information in a similar way to the main database, in that is uses a Map. However, in this case, although the keys are still table names, the values are now simply String lists containing column names. It also keeps a record of the number of tables in the database. As with other classes, such as Printer, this class provides peripheral functionality to another class, in this case Database. Thus an instance of it is created whenever a database object is generated, and it is then accessed through the database object via <code>db.schema.$&lt;$method$&gt;$</code>.</p>
+
+<p>Most of the methods contained within this class are package-private, and are designed to keep the schema up to date as changes are made to the tables in the database. The data contained here is not designed to be altered directly by the user, as that would result in it not matching the state of the tables, so the only publicly accessible methods here are designed for retrieving data. The <code>table()</code> method simply gets an array of columns for a specific table. The <code>all()</code> method, however, returns a Map of the table names, similar to how they are stored in the schema, but with a standard array instead of a list. Although a simple array may have been preferable, a Map was used because it seemed the only sensible way to present the data. It would have been over the top to have to used a completely new object, as ResultTable was used for table results, for the simple case of retrieving basic schema information.</p>
+
+<p>Also, it may be noted that some of the Schema methods are quite similar to those found in the Table class. Although schema data could have been contained directly in the main database class, and tied directly to the data contained with table objects, this would not have been in keeping with the principle of data encapsulation. As the schema was conceptually a separate entity, it made sense to maintain this data in its own class and not spread it across other classes, along with the cross-class manipulation of data that this would have entailed.</p>
+
+<h1>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h1>
+
+<p>This simple program has been created to demonstrate how the db package may be used, via the built-in API, in an application. It may be run with the command <code>ant demo</code> or <code>java -classpath bin Demo</code> from the root directory (the one with build.xml in it). This program shows how the Database object may be imported from the package, and used as the entry-point for the database system.</p>
+
+<p>A connection is made to the database, which loads up any table file present in the specified directory. Then a new table is created and some values inserted into it. The functionality of the commit method is shown next, as the created table is written back to disk. Next the query API is demonstrated, with a selection being made on the first and last columns. Some modifications are then made to the columns, and the result viewed using a schema method. Finally the table is dropped, and the changes committed to delete it from disk.</p>
+
+<p>The use of Exceptions is shown here to provide flexibility to a developer using the API. In situations such as a database connection failure it may be necessary to terminate program execution, since subsequent interactions will require it to exist. However, in situations where a select does not work, it may be due to an error on the end user's part, so the exception can be used here to present a warning message but not crash the program.</p>
+
+<h1>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h1>
+
+<p>Each class contains a private test method. These methods make use of the assertion statement to make sure that the class is behaving as it is supposed to. On the occurrence of a problem, the assertion will throw an Exception with a stack trace, which can be used to track down the bug. The test functions also throw generic Java Exceptions, so that if another issue occurs and throws an Exception, the information about this will be passed up to the tester in the form of another stack trace, to aid with debugging. This has proved quite useful for tracing unexpected bugs, sometimes in classes completely separate to the one currently being tested.</p>
+
+<p>The main method for a class is used to run its testing method, and either inform the tester if everything passed, or print a stack trace if not. This keeps testing modular and tied closely to the classes that it acts upon. It also allows tests to be updated in a relatively straightforward manner. In order to run all of the tests together, a target has been added to the ant build file, so simply entering <code>ant test</code> will run the tests on all classes.</p>
+
+<h1>
+<a id="development-timeline" class="anchor" href="#development-timeline" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development Timeline</h1>
+
+<p>This section details the development process used to produce the database application. Instead of attempting to develop all the different components in parallel, a modular approach was taken. The different features to be implemented were split up, and the code was written according to a release schedule, with each version targeting specific features. This approach tied quite nicely into Java's preference for abstracting conceptually distinct functionality into individual classes. In fact, for the most part, individual releases tended to correspond to the addition of a new class to the codebase.</p>
+
+<p>A snapshot of the code at each stage of the development has been included in the releases section, with each snapshot named according the releases described here. They are treated as minor releases, with the complete project being treated as a major release, named <code>v1.0-final</code>.</p>
+
+<h2>
+<a id="release-v01" class="anchor" href="#release-v01" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.1</h2>
+
+<p>This is the first minor release, and mainly deals with creating the project structure. It also includes the first class, Record, which stores rows in the database as objects. The first set of docs were generated for this release.</p>
+
+<ul>
+<li>Created Record class, designed to store data in the database.</li>
+<li>Added docs using javadoc.</li>
+<li>Created first set of unit tests for Record.</li>
+<li>Added README.</li>
+</ul>
+
+<h2>
+<a id="release-v02" class="anchor" href="#release-v02" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.2</h2>
+
+<p>This release focuses on the creation of a Table class, representing the core unit of data encapsulation in a database: the table.</p>
+
+<ul>
+<li>Created Table class, which wraps up a set of Records. Also manages column information.</li>
+<li>Tweaked Record class, added methods for adding and removing fields, to work with the Table functions for adding and removing columns.</li>
+<li>Added unit tests for Table, and for Record changes.</li>
+<li>Updated docs.</li>
+</ul>
+
+<h2>
+<a id="release-v03" class="anchor" href="#release-v03" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.3</h2>
+
+<p>The focus of this release was the DataFile class, which is responsible for reading and writing of data to disk. It makes use of Java's object serialisation capabilities.</p>
+
+<ul>
+<li>Created DataFile class, with methods for reading and writing tables to disk.</li>
+<li>Updated Table and Record classes to implement serialisation.</li>
+<li>Added information on how to compile and run the code to README.</li>
+<li>Fixed: missing documentation for Table test method.</li>
+<li>Tweaked class access modifiers for javadoc.</li>
+</ul>
+
+<h2>
+<a id="release-v04" class="anchor" href="#release-v04" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.4</h2>
+
+<p>This release deals with the Printer class, which handles printing out data to the screen.</p>
+
+<ul>
+<li>Created Printer class, which offers methods for printing out table information to screen.</li>
+<li>Tweaked Table and Record classes to allow them to return information required by Printer.</li>
+<li>Updated docs.</li>
+</ul>
+
+<h2>
+<a id="release-v05" class="anchor" href="#release-v05" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.5</h2>
+
+<p>There are two main additions to the codebase with this release. The first is the addition of the Database class, which is intended to provide the core functionality for the program, and tie the other classes together. The other is the addition of primary keys to the tables.</p>
+
+<ul>
+<li>Added primary keys, they are defined as the first column of any table.</li>
+<li>Updated tests for Table and Record.</li>
+<li>Tweaked DataFile: changed dataDir from a class to an instance variable, added method to list table files.</li>
+<li>Created Database object, designed to be the entry point for the database.</li>
+<li>Made sure tests for Database and DataFile clear out the database directory after themselves.</li>
+<li>Fixed bug that resulted in incorrect file extensions.</li>
+</ul>
+
+<h2>
+<a id="release-v06" class="anchor" href="#release-v06" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.6</h2>
+
+<p>Instead of adding any one main new feature, like previous releases, this release focuses on refactoring, stability and performance improvements. It is partly in preparation for the introduction of queries in the next release.</p>
+
+<ul>
+<li>Database now builds database in memory from file upon cosntruction.</li>
+<li>Added drop table method to Database.</li>
+<li>Added ability to delete files to DataFile.</li>
+<li>Database now deletes files from disk corresponding to tables that have been dropped.</li>
+<li>Added commit method to Database, which updates the disk from the database in memory.</li>
+<li>Updated many of the classes to make better use of Exceptions, this has simplified a lot of the testing code.</li>
+<li>Fixed bug where DataFile was listing incorrect file names.</li>
+<li>Switched rows in Table to linked list for performance reasons.</li>
+<li>Altered access modifiers on a number of classes and methods to improve abstraction.</li>
+<li>Fixed bug where column deletion could result in loss of primary key.</li>
+</ul>
+
+<h2>
+<a id="release-v07" class="anchor" href="#release-v07" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.7</h2>
+
+<p>The primary target of this release is the new Query class, which acts as an API for CRUD operations on the database. It also includes shifting to a new Ant build system and updates to the Printer class.</p>
+
+<ul>
+<li>Created Query class, handles simple database queries.</li>
+<li>Tied Query to Database.</li>
+<li>Tweaked current classes to work with requirements of Query.</li>
+<li>Added a build file for Apache Ant, to simplify build process.</li>
+<li>Created ResultTable, a simple subclass of Table with primary key restrictions removed. Designed for use with the Query select method.</li>
+<li>Tweaked Printer: now acts as a component of Table class.</li>
+<li>Updated docs.</li>
+</ul>
+
+<h2>
+<a id="release-v08" class="anchor" href="#release-v08" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release v0.8</h2>
+
+<p>This release introduces the Schema class, designed to maintain metadata about the database.</p>
+
+<ul>
+<li>Created Schema class, for managing database metadata.</li>
+<li>Modified Database and Query methods to work with Schema.</li>
+<li>Updated docs.</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Ap0c/db">DB</a> is maintained by <a href="https://github.com/Ap0c">Ap0c</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>

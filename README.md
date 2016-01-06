@@ -1,6 +1,6 @@
 # DB
 
-Simple database engine written in Java.
+Simple database engine written in Java, designed to act as a package providing database operations for other Java applications. This is a personal project and has not been designed for use in production. For more information read the Overview, or the documentation found in the `docs` directory (start with `index.html`).
 
 Built against Java 8u40 and Apache Ant 1.9.4.
 
@@ -13,6 +13,12 @@ From root directory:
 or
 
 `javac -d bin src/db/*.java`
+
+## Demo
+
+To run the demo program:
+
+`ant demo`
 
 ## Run Tests
 

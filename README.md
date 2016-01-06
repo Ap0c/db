@@ -1,6 +1,6 @@
 # DB
 
-Simple database engine written in Java, designed to act as a package providing database operations for other Java applications. This is a personal project and has not been designed for use in production. For more information read the Overview, or the documentation found in the `docs` directory (start with `index.html`).
+Simple database engine written in Java, designed to act as a package providing database operations for other Java applications. This is a personal project and has not been designed for use in production. For more information read the [Overview](http://ap0c.github.io/db), or the documentation found in the `docs` directory (start with `index.html`).
 
 Built against Java 8u40 and Apache Ant 1.9.4.
 
